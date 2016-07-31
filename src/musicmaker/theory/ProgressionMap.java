@@ -63,12 +63,11 @@ public class ProgressionMap {
 
    public ProgressionMap(Note key, String start) {
       this.key = key;
-      Position startPos = Position.get(start);
+      startPos = Position.get(start);
       if (startPos == null) {
          System.err.println("Error: Invalid position id ?<start>=\"" + start +"\" in ProgressionMap(?<key>=\"" + key + "\", <start>)");
          System.exit(-1);
       }
-      this.startPos = startPos;
       setup();
    }
 

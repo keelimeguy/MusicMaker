@@ -33,7 +33,7 @@ public class MusicMaker extends Canvas implements Runnable {
 
    private Screen screen;
    private Level level;
-   private Entity player;
+   private Entity offset;
    private static MusicPlayer snd;
 
    // The image which will be drawn in the game window
@@ -49,7 +49,7 @@ public class MusicMaker extends Canvas implements Runnable {
       frame = new JFrame();
       key = new Keyboard();
       level = new Level(width, height);
-      player = new Entity(width / 2, height / 2);
+      offset = new Entity(width / 2, height / 2);
 
       define();
 
@@ -64,6 +64,7 @@ public class MusicMaker extends Canvas implements Runnable {
 
    private void define() {
       level.empty();
+      level.add(offset);
    }
 
    // Returns the width of the window with scaling.
@@ -144,8 +145,8 @@ public class MusicMaker extends Canvas implements Runnable {
    // Update the game
    public void update() {
 
-      int xScroll = 0;//player.getX() - screen.getWidth() / 2;
-      int yScroll = 0;//player.getY() - screen.getHeight() / 2;
+      int xScroll = 0;//offset.getX() - screen.getWidth() / 2;
+      int yScroll = 0;//offset.getY() - screen.getHeight() / 2;
 
       key.update();
       level.update(xScroll, yScroll, this);
@@ -158,8 +159,8 @@ public class MusicMaker extends Canvas implements Runnable {
       // Clear the screen to black before rendering
       screen.clear(0);
 
-      int xScroll = player.getX() - screen.getWidth() / 2;
-      int yScroll = player.getY() - screen.getHeight() / 2;
+      int xScroll = 0;//offset.getX() - screen.getWidth() / 2;
+      int yScroll = 0;//offset.getY() - screen.getHeight() / 2;
 
       // Render the level with the given screen offset
       level.render(xScroll, yScroll, screen);

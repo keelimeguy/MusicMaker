@@ -39,7 +39,6 @@ public class Level {
    protected void time() {
    }
 
-   
    public void render(int xScroll, int yScroll, Screen screen) {
 
       // Tells the screen how much it is to be offset

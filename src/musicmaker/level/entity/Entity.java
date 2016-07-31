@@ -25,6 +25,7 @@ public class Entity {
    }
 
    public void render(Screen screen) {
+      if (sprite == null) return;
       // Offset the position to center the entity
       int xx = x - sprite.SIZE_X / 2;
       int yy = y - sprite.SIZE_Y / 2;

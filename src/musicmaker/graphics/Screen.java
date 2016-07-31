@@ -40,6 +40,7 @@ public class Screen {
    }
 
    public void renderSprite(Sprite sprite, int xp, int yp) {
+      if (sprite == null) return;
       xp -= xOffset;
       yp -= yOffset;
 

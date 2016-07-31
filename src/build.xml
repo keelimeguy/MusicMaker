@@ -1,4 +1,4 @@
-<project name="MusicMaker" default="run" basedir="..">
+<project name="MusicMaker" default="dist" basedir="..">
    <!-- set global properties for this build -->
    <property name="src" location="src"/>
    <property name="build" location="build"/>
@@ -31,12 +31,9 @@
    </target>
 
    <target name="run" depends="dist">
-      <java classname="${main-class}">
-         <classpath>
-            <path refid="compile.classpath"/>
-            <path location="${dist}/lib/MusicMaker.jar"/>
-         </classpath>
-      </java>
+      <exec executable="java">
+         <arg line="-jar ${dist}/lib/MusicMaker.jar"/>
+      </exec>
    </target>
 
    <target name="clean">
