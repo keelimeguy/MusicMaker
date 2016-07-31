@@ -9,13 +9,18 @@ import java.lang.Integer;
 import java.lang.Math;
 
 public class Chord {
-   
-   private static final String CHORD_REGEX = "(?<key>[A-G][#b]?)(?<type>(m|M|dim|aug|mM)?)(?<add>([0-9]*)?)(?<bass>((/[A-G][#b]?)?|(/[0-9]+)?))(?<adjust>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)";
-   private static final String REDUCED_CHORD_REGEX = "[A-G][#b]?(m|M|dim|aug|mM)?([0-9]*)?((/[A-G][#b]?)?|(/[0-9]+)?)((([#b]|add|no[b#]?)[0-9]+)|sus[24])*";
+
+   private static final String CHORD_REGEX = "(?<key>[A-G][#b]?)(?<type>(m|M|dim|aug|mM)?)(?<add>([0-9]*)?)" +
+      "(?<adjust>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)(?<bass>((/[A-G][#b]?)?|(/[0-9]+)?))(?<adjust2>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)";
+   private static final String REDUCED_CHORD_REGEX = "[A-G][#b]?(m|M|dim|aug|mM)?([0-9]*)?((([#b]|add|no[b#]?)[0-9]+)|sus[24])*" +
+      "((/[A-G][#b]?)?|(/[0-9]+)?)((([#b]|add|no[b#]?)[0-9]+)|sus[24])*";
    private ArrayList<Note> notes;
+   private static final String EMPTY_ID = "0";
+   private String chordId;
 
    public Chord() {
       notes = new ArrayList<Note>();
+      chordId = EMPTY_ID;
    }
 
    public Chord(String chordId) {
@@ -23,20 +28,21 @@ public class Chord {
       make(chordId);
    }
 
-   private Chord make(String chordId) {
+   private void make(String chordId) {
       clear();
+      this.chordId = chordId;
 
       Pattern reg = Pattern.compile(CHORD_REGEX);
       Matcher matcher = reg.matcher(chordId);
-      
+
       String key = "", type = "", add = "", adjust = "", bass = "";
-      
+
       try {
          matcher.matches();
          key = matcher.group("key");
          type = matcher.group("type");
          add = matcher.group("add");
-         adjust = matcher.group("adjust");
+         adjust = matcher.group("adjust") + matcher.group("adjust2");
          bass = matcher.group("bass");
       } catch(Exception e){}
 
@@ -45,18 +51,18 @@ public class Chord {
          // Automatically add root
          Note root = Note.get(key).normal();
          add(root);
-         
+
          // Seventh will get one flat
          int minor7 = 1;
 
          if (type.length() != 0 ) {
-            
+
             // Add the appropriate third
             if (type.equals("m") || type.equals("dim") || type.equals("mM"))
                add(root.halfStep(findStep(3)).flat());
-            else 
+            else
                add(root.halfStep(findStep(3)));
-            
+
             if (type.equals("M") || type.equals("mM")) // Don't flatten seventh if major
                minor7 = 0;
 
@@ -74,18 +80,18 @@ public class Chord {
 
          } else { // Automatically add third and fifth
             add(root.halfStep(findStep(3)));
-            add(root.halfStep(findStep(5))); 
+            add(root.halfStep(findStep(5)));
          }
-         
+
          if (add.length() != 0) {
             int addId = Integer.parseInt(add);
             /*
             if(addId > 7) // Add seventh when notes above seventh are implicitly added
-               if (minor7==0) 
+               if (minor7==0)
                   add(root.halfStep(findStep(7)));
-               else if (minor7==1) 
+               else if (minor7==1)
                   add(root.halfStep(findStep(7)).flat());
-               else if (minor7==2) 
+               else if (minor7==2)
                   add(root.halfStep(findStep(7)).flat().flat());
             */
             if (addId == 7 && minor7==1)
@@ -99,7 +105,7 @@ public class Chord {
             }
          } else if (type.equals("M") || type.equals("mM")) // Add seventh when explicitly major
             add(root.halfStep(findStep(7)));
-         
+
          if (adjust.length() != 0) {
 
             // First deal with omissions so that we don't overwrite other adjustments
@@ -127,7 +133,7 @@ public class Chord {
                      add(root.halfStep(findStep(nextStep)));
                }
             }
-            
+
             // Deal with sharps
             String sharpBase = adjust.replaceAll("(((b|add|no[b#]?)[0-9]+)|sus[24])*", "");
             for (String sharpSplit: sharpBase.split("#")) {
@@ -177,21 +183,22 @@ public class Chord {
          System.exit(-1);
       }
 
-      System.out.println("key: " + key);
-      System.out.println("type: " + type);
-      System.out.println("add: " + add);
-      System.out.println("adjust: " + adjust);
-      System.out.println("bass: " + bass);
+      /*
+      System.out.println(chordId + ": ");
+      System.out.println("\tkey: " + key);
+      System.out.println("\ttype: " + type);
+      System.out.println("\tadd: " + add);
+      System.out.println("\tadjust: " + adjust);
+      System.out.println("\tbass: " + bass);
 
       System.out.println();
 
       for (Note note: notes)
-         System.out.println("  "+note);
-      
-      return null;
+         System.out.println("\t\t"+note);
+      */
    }
 
-   // Calculate needed halfsteps to reach given note of scale
+   // Calculate needed halfsteps to reach given note of major scale
    public static int findStep (int notePos) {
       int note = notePos;
       int step = 0;
@@ -228,22 +235,23 @@ public class Chord {
             System.err.println("Error: Unexpected value ?<note>=\"" + note + "\" in Chord.findStep(?<notePos>=\"" + notePos + "\")" +
                "\n\t<notePos> must be greater than zero");
             System.exit(-1);
-      } 
+      }
       return step;
    }
 
-   public void add(Note note) {
+   private void add(Note note) {
       notes.remove(note);
       notes.add(note);
    }
 
-   public void add(Note note, int pos) {
+   private void add(Note note, int pos) {
       notes.remove(note);
       notes.add(pos, note);
    }
 
    public void clear() {
       notes.clear();
+      chordId = EMPTY_ID;
    }
 
    public void order() {
@@ -268,11 +276,23 @@ public class Chord {
       }
    }
 
+   public String toString() {
+      return chordId;
+   }
+
+   public void show() {
+      String str = chordId + ":";
+      for (Note note: notes)
+         str += "\n\t" + note;
+      System.out.println(str);
+   }
+
    public static void main(String[] args) {
       if (args.length != 1) {
          System.err.println("Usage: java Chord <chordId>");
          System.exit(-1);
       }
       Chord chord = new Chord(args[0]);
+      chord.show();
    }
 }

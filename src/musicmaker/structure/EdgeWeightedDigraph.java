@@ -52,7 +52,7 @@ public class EdgeWeightedDigraph {
       }
    }
 
-   private class DirectedEdge {
+   public class DirectedEdge {
       private final int v;
       private final int w;
       private String val;
