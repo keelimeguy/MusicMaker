@@ -1,6 +1,8 @@
 package musicmaker;
 
 import musicmaker.graphics.Screen;
+import musicmaker.theory.ProgressionMap;
+import musicmaker.theory.Progression;
 import musicmaker.input.Keyboard;
 import musicmaker.input.Mouse;
 import musicmaker.level.Level;
@@ -35,6 +37,7 @@ public class MusicMaker extends Canvas implements Runnable {
    private Level level;
    private Entity offset;
    private static MusicPlayer snd;
+   private ProgressionMap progressionMap;
 
    // The image which will be drawn in the game window
    private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -51,7 +54,7 @@ public class MusicMaker extends Canvas implements Runnable {
       level = new Level(width, height);
       offset = new Entity(width / 2, height / 2);
 
-      define();
+      define("C", "I", 6);
 
       snd = new MusicPlayer();
 
@@ -62,9 +65,13 @@ public class MusicMaker extends Canvas implements Runnable {
       addMouseMotionListener(mouse);
    }
 
-   private void define() {
+   private void define(String key, String start, int length) {
       level.empty();
       level.add(offset);
+
+      progressionMap = new ProgressionMap(key, start);
+      Progression progression = progressionMap.generate(length);
+      progression.show();
    }
 
    // Returns the width of the window with scaling.
@@ -164,6 +171,8 @@ public class MusicMaker extends Canvas implements Runnable {
 
       // Render the level with the given screen offset
       level.render(xScroll, yScroll, screen);
+
+      //g.drawText();
 
       // Copy the screen pixels to the image to be drawn
       System.arraycopy(screen.getPixels(), 0, pixels, 0, pixels.length);

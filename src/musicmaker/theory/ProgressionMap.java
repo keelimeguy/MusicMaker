@@ -77,6 +77,30 @@ public class ProgressionMap {
       setup();
    }
 
+   public ProgressionMap(String key, String start) {
+      this.key = Note.get(key);
+      if (key == null) {
+         System.err.println("Error: Invalid key ?<key>=\"" + key +"\" in ProgressionMap(<key>, ?<start>=\"" + start + "\")");
+         System.exit(-1);
+      }
+      startPos = Position.get(start);
+      if (startPos == null) {
+         System.err.println("Error: Invalid position id ?<start>=\"" + start +"\" in ProgressionMap(?<key>=\"" + key + "\", <start>)");
+         System.exit(-1);
+      }
+      setup();
+   }
+
+   public ProgressionMap(String key) {
+      this.key = Note.get(key);
+      if (key == null) {
+         System.err.println("Error: Invalid key ?<key>=\"" + key +"\" in ProgressionMap(<key>)");
+         System.exit(-1);
+      }
+      startPos = Position.I;
+      setup();
+   }
+
    public void setKey(Note key) {
       this.key = key;
    }
