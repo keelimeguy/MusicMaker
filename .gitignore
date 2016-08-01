@@ -2,6 +2,13 @@
 Thumbs.db
 ehthumbs.db
 
+# Open Emacs files
+\#*\#
+.\#*
+
+# Text editor backups
+*~
+
 # Class files
 *.class
 
