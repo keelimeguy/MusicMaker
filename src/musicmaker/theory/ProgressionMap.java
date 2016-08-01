@@ -13,15 +13,16 @@ public class ProgressionMap {
          Ibase3("I/3", 1, "/3", new String[]{}), Ibase5("I/5", 1, "/5", new String[]{}),
          IVbase1("IV/1", 4, "/1", new String[]{}), Vbase1("V/1", 5, "/1", new String[]{}),
 
-         IIIm7b5("IIIm7b5", 3, "m7b5", new String[]{}), VI("VI", 6, "", new String[]{"7", "9", "b9"}),
+         // Mb9no7 used instead of b9 for now to avoid conflicts with Bb 9 and B b9 for instance
+         IIIm7b5("IIIm7b5", 3, "m7b5", new String[]{}), VI("VI", 6, "", new String[]{"7", "9", "Mb9no7"}),
          sharpIdim7("#Idim7", 1.5, "dim7", new String[]{}), sharpIVm7b5("#IVm7b5", 4.5, "m7b5", new String[]{}),
-         VII("VII", 7, "", new String[]{"7", "9", "b9"}), sharpIIdim7("#IIdim7", 2.5, "dim7", new String[]{}),
-         Vm("Vm", 5, "m", new String[]{"7"}), I_ALT("I*", 1, "", new String[]{"7", "9", "b9"}),
+         VII("VII", 7, "", new String[]{"7", "9", "Mb9no7"}), sharpIIdim7("#IIdim7", 2.5, "dim7", new String[]{}),
+         Vm("Vm", 5, "m", new String[]{"7"}), I_ALT("I*", 1, "7", new String[]{"7", "9", "Mb9no7"}),
          Im6("Im6", 1, "m6", new String[]{}), Vbase2("V/2", 5, "/2", new String[]{}),
-         II("II", 2, "", new String[]{"7", "9", "b9"}), bVI("bVI", -6.5, "", new String[]{}),
+         II("II", 2, "", new String[]{"7", "9", "Mb9no7"}), bVI("bVI", -6.5, "", new String[]{}),
          bVII("bVII", -7.5, "", new String[]{"9"}), IVm7("IVm7", 4, "m7", new String[]{}),
          bII7("bII7", -2.5, "7", new String[]{}), VIm7b5baseb3("VIm7b5/b3", 6, "m7b5/b3", new String[]{}),
-         sharpVdim7("#5dim7", 5.5, "dim7", new String[]{}), III("III", 3, "", new String[]{"7", "9", "b9"}),
+         sharpVdim7("#5dim7", 5.5, "dim7", new String[]{}), III("III", 3, "", new String[]{"7", "9", "Mb9no7"}),
          VIIm7b5("VIIm7b5", 7, "m7b5", new String[]{}), bVI7("bVI7", -6.5, "7", new String[]{}),
          bVII9("bVII9", -7.5, "9", new String[]{}), Idimbaseb3("Idim/b3", 1, "dim/b3", new String[]{});
 
@@ -219,7 +220,7 @@ public class ProgressionMap {
       Note key = Note.get(args[0]);
       if (key == null) {
          System.err.println("Error: Invalid key ?<key>=\"" + args[0] +"\"" +
-            "\n\t<key> should match [A-G][#b]?");
+            "\n\t<key> should match [A-G](##?|bb?)?");
          System.exit(-1);
       }
 

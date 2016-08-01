@@ -2,7 +2,7 @@ package musicmaker.sound;
 
 /**
  *
- * @author Mangusbrother 
+ * @author Mangusbrother
  * with edits by keelimeguy
  */
 
