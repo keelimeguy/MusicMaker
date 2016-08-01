@@ -11,9 +11,9 @@ import java.lang.Math;
 public class Chord {
 
    private static final String CHORD_REGEX = "(?<key>[A-G][#b]?)(?<type>(m|M|dim|aug|mM)?)(?<add>([0-9]*)?)" +
-      "(?<adjust>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)(?<bass>((/[A-G][#b]?)?|(/[0-9]+)?))(?<adjust2>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)";
+      "(?<adjust>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)(?<bass>((/[A-G][#b]?)?|(/[b#]?[0-9]+)?))(?<adjust2>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)";
    private static final String REDUCED_CHORD_REGEX = "[A-G][#b]?(m|M|dim|aug|mM)?([0-9]*)?((([#b]|add|no[b#]?)[0-9]+)|sus[24])*" +
-      "((/[A-G][#b]?)?|(/[0-9]+)?)((([#b]|add|no[b#]?)[0-9]+)|sus[24])*";
+      "((/[A-G][#b]?)?|(/[b#]?[0-9]+)?)((([#b]|add|no[b#]?)[0-9]+)|sus[24])*";
    private ArrayList<Note> notes;
    private static final String EMPTY_ID = "0";
    private String chordId;
@@ -166,11 +166,17 @@ public class Chord {
          Note bassNote = root;
 
          if (bass.length() != 0) {
-            String bassId = bass.split("/")[1];
+            int stepAdjust = 0;
+            if(bass.charAt(1) == 'b')
+               stepAdjust = -1;
+            else if(bass.charAt(1) == '#')
+               stepAdjust = 1;
+            String bassId = bass.replaceAll("/[b#]?", "");
+
             if (bassId.charAt(0) >= '0' && bassId.charAt(0) <= '9')
-               bassNote = root.halfStep(findStep(Integer.parseInt(bassId)));
+               bassNote = root.halfStep(findStep(Integer.parseInt(bassId)) + stepAdjust);
             else {
-               bassNote = Note.get(bassId);
+               bassNote = Note.get(bassId).halfStep(stepAdjust);
                add(bassNote);
             }
          }
