@@ -30,14 +30,6 @@ public enum Note {
       return halfStep(1);
    }
 
-   public Note flatflat() {
-      return halfStep(-2);
-   }
-
-   public Note sharpsharp() {
-      return halfStep(2);
-   }
-
    // public Note natural() {
    //    return null;
    // }
@@ -103,7 +95,7 @@ public enum Note {
    }
 
    public Note asSharpStrong() {
-       Note asw = asSharpStrong();
+       Note asw = asSharpWeak();
        if (asw != this) {
 	   return asw;
        }
