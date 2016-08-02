@@ -34,6 +34,12 @@ public class Pitch {
       return -1;
    }
 
+   public float getFreq() { return freq; }
+
+   public String toString() {
+      return "" + note + octave;
+   }
+
    public static void main(String[] args) {
       if (args.length != 2) {
          System.err.println("Usage: java Pitch <note> <octave>");

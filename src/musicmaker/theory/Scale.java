@@ -1,8 +1,9 @@
 package musicmaker.theory;
 
-public abstract class Scale {
+public class Scale {
 
    protected Note[] notes;
+   protected int[] intervals;
 
    public enum Mode {
       // Selected preset modes for convenience. Note that most jazz scales
@@ -41,10 +42,14 @@ public abstract class Scale {
       // is that you can make multi-octave scales. This allows oddities
       // like arpeggios-as-scales, which is a bad idea, and Lydian #15, which
       // is the best idea.
+      if (intervals.length > 0)
+         if (intervals[0] != 0)
+            System.out.println("Warning: scale created that does not begin at 0");
       notes = new Note[intervals.length];
       for (int i: intervals) {
          notes[i] = root.halfStep(i);
       }
+      this.intervals = intervals;
    }
 
 
@@ -62,5 +67,21 @@ public abstract class Scale {
       // "Cmaj(b6/#9)" chord from an Ionian scale.
       // Like getNote, this is indexed from 1 according to musical conventions.
       notes[(degree - 1) % notes.length] = note;
+   }
+
+   // Calculate needed halfsteps to reach given note of scale
+   public int findStep (int notePos) {
+      int degree = notePos;
+      int step = 0;
+      if (degree > notes.length) { // Adjust for octaves
+         step = (notePos / (notes.length + 1)) * 12;
+         degree = (notePos % (notes.length + 1)) + 1;
+      }
+      if (degree == notes.length + 1) {
+         step += 12;
+         degree = 1;
+      }
+      step += intervals[degree - 1];
+      return step;
    }
 }

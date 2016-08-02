@@ -14,7 +14,7 @@ public class ChordPlayer {
       this.maxim = maxim;
       this.chord = chord;
       waves = new WavetableSynth[chord.size()];
-      int octave = 4;
+      int octave = 3;
       for (int i = 0; i< waves.length; i++) {
          waves[i] = maxim.createWavetableSynth(516);
          if (i > 0 && chord.getNote(i).compareTo(chord.getNote(i-1)) < 0) {

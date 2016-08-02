@@ -28,6 +28,118 @@ public class Chord {
       make(chordId);
    }
 
+   // Calculate needed halfsteps to reach given note of major scale
+   public static int findStep (int notePos) {
+      int note = notePos;
+      int step = 0;
+      if (note > 7) { // Adjust for octaves
+         note = (notePos % 8) + 1;
+         step = (notePos / 8) * 12;
+      }
+      switch (note) {
+         case 8:
+            step += 12;
+            break;
+         case 7:
+            step += 11;
+            break;
+         case 6:
+            step += 9;
+            break;
+         case 5:
+            step += 7;
+            break;
+         case 4:
+            step += 5;
+            break;
+         case 3:
+            step += 4;
+            break;
+         case 2:
+            step += 2;
+            break;
+         case 1:
+            step += 0;
+            break;
+         default:
+            System.err.println("Error: Unexpected value ?<note>=\"" + note + "\" in Chord.findStep(?<notePos>=\"" + notePos + "\")" +
+               "\n\t<notePos> must be greater than zero");
+            System.exit(-1);
+      }
+      return step;
+   }
+
+   private void add(Note note) {
+      notes.remove(note);
+      notes.add(note);
+   }
+
+   private void add(Note note, int pos) {
+      notes.remove(note);
+      notes.add(pos, note);
+   }
+
+   public void clear() {
+      notes.clear();
+      chordId = EMPTY_ID;
+   }
+
+   public void order() {
+      if(notes.isEmpty()) return;
+      Collections.sort(notes);
+   }
+
+   public int size() {
+      return notes.size();
+   }
+
+   public Note getNote(int i) {
+      if (i >= 0 && i < notes.size())
+         return notes.get(i);
+      return null;
+   }
+
+   public ArrayList<Note> getNotesList() {
+      return notes;
+   }
+
+   // Sort notes so that root would be positioned first
+   public void order(Note root) {
+      if (notes.contains(root)) {
+         order();
+         Note next = notes.get(0);
+         while (next != root) {
+            notes.remove(next);
+            notes.add(next);
+            next = notes.get(0);
+         }
+      } else {
+         notes.add(root);
+         order(root);
+         notes.remove(root);
+      }
+   }
+
+   public String toString() {
+      return chordId;
+   }
+
+   public void show() {
+      String str = chordId + ":";
+      for (Note note: notes)
+         str += "\n\t" + note;
+      System.out.println(str);
+   }
+
+   public static void main(String[] args) {
+      if (args.length != 1) {
+         System.err.println("Usage: java Chord <chordId>");
+         System.exit(-1);
+      }
+      Chord chord = new Chord(args[0]);
+      chord.show();
+   }
+
    private void make(String chordId) {
       clear();
       this.chordId = chordId;
@@ -233,117 +345,5 @@ public class Chord {
       for (Note note: notes)
          System.out.println("\t\t"+note);
       */
-   }
-
-   // Calculate needed halfsteps to reach given note of major scale
-   public static int findStep (int notePos) {
-      int note = notePos;
-      int step = 0;
-      if (note > 7) { // Adjust for octaves
-         note = (notePos % 8) + 1;
-         step = (notePos / 8) * 12;
-      }
-      switch (note) {
-         case 8:
-            step += 12;
-            break;
-         case 7:
-            step += 11;
-            break;
-         case 6:
-            step += 9;
-            break;
-         case 5:
-            step += 7;
-            break;
-         case 4:
-            step += 5;
-            break;
-         case 3:
-            step += 4;
-            break;
-         case 2:
-            step += 2;
-            break;
-         case 1:
-            step += 0;
-            break;
-         default:
-            System.err.println("Error: Unexpected value ?<note>=\"" + note + "\" in Chord.findStep(?<notePos>=\"" + notePos + "\")" +
-               "\n\t<notePos> must be greater than zero");
-            System.exit(-1);
-      }
-      return step;
-   }
-
-   private void add(Note note) {
-      notes.remove(note);
-      notes.add(note);
-   }
-
-   private void add(Note note, int pos) {
-      notes.remove(note);
-      notes.add(pos, note);
-   }
-
-   public void clear() {
-      notes.clear();
-      chordId = EMPTY_ID;
-   }
-
-   public void order() {
-      if(notes.isEmpty()) return;
-      Collections.sort(notes);
-   }
-
-   public int size() {
-      return notes.size();
-   }
-
-   public Note getNote(int i) {
-      if (i >= 0 && i < notes.size())
-         return notes.get(i);
-      return null;
-   }
-
-   public ArrayList<Note> getNotesList() {
-      return notes;
-   }
-
-   // Sort notes so that root would be positioned first
-   public void order(Note root) {
-      if (notes.contains(root)) {
-         order();
-         Note next = notes.get(0);
-         while (next != root) {
-            notes.remove(next);
-            notes.add(next);
-            next = notes.get(0);
-         }
-      } else {
-         notes.add(root);
-         order(root);
-         notes.remove(root);
-      }
-   }
-
-   public String toString() {
-      return chordId;
-   }
-
-   public void show() {
-      String str = chordId + ":";
-      for (Note note: notes)
-         str += "\n\t" + note;
-      System.out.println(str);
-   }
-
-   public static void main(String[] args) {
-      if (args.length != 1) {
-         System.err.println("Usage: java Chord <chordId>");
-         System.exit(-1);
-      }
-      Chord chord = new Chord(args[0]);
-      chord.show();
    }
 }

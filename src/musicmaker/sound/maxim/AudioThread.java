@@ -78,7 +78,8 @@ public class AudioThread extends Thread {
             if (ag != null)
               val += ag.getSample();
           }
-          val /= audioGens.size();
+          if (audioGens.size() > 0)
+            val /= audioGens.size();
         }
         bufferS[i] = (short) val;
       }
