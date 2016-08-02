@@ -296,6 +296,20 @@ public class Chord {
       Collections.sort(notes);
    }
 
+   public int size() {
+      return notes.size();
+   }
+
+   public Note getNote(int i) {
+      if (i >= 0 && i < notes.size())
+         return notes.get(i);
+      return null;
+   }
+
+   public ArrayList<Note> getNotesList() {
+      return notes;
+   }
+
    // Sort notes so that root would be positioned first
    public void order(Note root) {
       if (notes.contains(root)) {

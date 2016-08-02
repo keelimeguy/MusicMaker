@@ -63,7 +63,7 @@ public class Progression {
       if (!chords.isEmpty()) {
          str = "";
          for (Chord chord: chords) {
-            str+=chord + NAME_SEPARATOR;
+            str += chord + NAME_SEPARATOR;
          }
          str = str.substring(0, str.length() - NAME_SEPARATOR.length());
       }

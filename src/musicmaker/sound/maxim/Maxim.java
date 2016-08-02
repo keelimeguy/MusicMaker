@@ -60,6 +60,10 @@ public class Maxim {
     // to ask the audioplayer for samples
     return ap;
   }
+
+  public void removeAudioPlayer(AudioPlayer ap) {
+    audioThread.removeAudioGenerator(ap);
+  }
   // /**
   //  * Create an AudioStreamPlayer which can stream audio from the
   //  * internet as well as local files.  Does not provide precise

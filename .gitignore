@@ -9,8 +9,6 @@ ehthumbs.db
 # Text editor backups
 *~
 
-# Class files
-=======
 # Compiled files
 *.class
 dist

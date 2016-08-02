@@ -272,7 +272,7 @@ public class Sprite {
             boolean found = false;
             for (int x : exclude)
                if (x == color.getRGB()) found = true;
-            
+
             if (!found)
                sprite.pixels[i + j * sprite.SIZE_X] = ncolor;
             else

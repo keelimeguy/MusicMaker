@@ -1,13 +1,13 @@
 package musicmaker.theory;
 
 public enum Note {
-   // Ordered so that flats have precedence over sharps
-   A(0, "A"), BFLATFLAT(0, "Bbb"), GSHARPSHARP(0, "G##"), BFLAT(1, "Bb"), ASHARP(1, "A#"), CFLATFLAT(1, "Cbb"),
-      B(2, "B"), CFLAT(2, "Cb"), ASHARPSHARP(2, "A##"), C(3, "C"), BSHARP(3, "B#"), DFLATFLAT(3, "Dbb"),
-      DFLAT(4, "Db"), CSHARP(4, "C#"), BSHARPSHARP(4, "B##"), D(5, "D"), EFLATFLAT(5, "Ebb"), CSHARPSHARP(5, "C##"),
-      EFLAT(6, "Eb"), DSHARP(6, "D#"), FFLATFLAT(6, "Fbb"), E(7, "E"), FFLAT(7, "Fb"), DSHARPSHARP(7, "D##"),
-      F(8, "F"), ESHARP(8, "E#"), GFLATFLAT(8, "Gbb"), GFLAT(9, "Gb"), FSHARP(9, "F#"), ESHARPSHARP(9, "E##"),
-      G(10, "G"), AFLATFLAT(10, "Abb"), FSHARPSHARP(10, "F##"), AFLAT(11, "Ab"), GSHARP(11, "G#");
+   // Ordered so that flats have precedence over sharps (but not over naturals)
+   C(0, "C"), BSHARP(0, "B#"), DFLATFLAT(0, "Dbb"), DFLAT(1, "Db"), CSHARP(1, "C#"), BSHARPSHARP(1, "B##"),
+      D(2, "D"), EFLATFLAT(2, "Ebb"), CSHARPSHARP(2, "C##"), EFLAT(3, "Eb"), DSHARP(3, "D#"), FFLATFLAT(3, "Fbb"),
+      E(4, "E"), FFLAT(4, "Fb"), DSHARPSHARP(4, "D##"), F(5, "F"), ESHARP(5, "E#"), GFLATFLAT(5, "Gbb"), GFLAT(6, "Gb"),
+      FSHARP(6, "F#"), ESHARPSHARP(6, "E##"), G(7, "G"), AFLATFLAT(7, "Abb"), FSHARPSHARP(7, "F##"),
+      AFLAT(8, "Ab"), GSHARP(8, "G#"), A(9, "A"), BFLATFLAT(9, "Bbb"), GSHARPSHARP(9, "G##"), BFLAT(10, "Bb"),
+      ASHARP(10, "A#"), CFLATFLAT(10, "Cbb"), B(11, "B"), CFLAT(11, "Cb"), ASHARPSHARP(11, "A##");
 
    public static final int NUM_NOTES = 12;
    private final int val;
@@ -22,29 +22,9 @@ public enum Note {
       return halfStep(-1);
    }
 
-   public Note doubleFlat() {
-       return halfStep(-2);
-   }
-
    public Note sharp() {
       return halfStep(1);
    }
-
-   public Note doubleSharp() {
-       return halfStep(2);
-   }
-
-   public Note flatflat() {
-      return halfStep(-2);
-   }
-
-   public Note sharpsharp() {
-      return halfStep(2);
-   }
-
-   // public Note natural() {
-   //    return null;
-   // }
 
    // Return first note of the same value (to clean odd cases e.g. B# -> C)
    public Note normal() {
@@ -53,7 +33,7 @@ public enum Note {
 
    // Return first note of a given number of halfsteps away
    public Note halfStep(int halfSteps) {
-      return get(this.val + halfSteps);
+      return get(val + halfSteps);
    }
 
    // Return first note of the given value
@@ -81,9 +61,6 @@ public enum Note {
 
    public String toString() { return name; }
 
-   // The following switch statements seem fine for now.
-   // It's possible they'll get way uglier if double-sharpness
-
    public Note asSharpWeak() {
        // Changing this may change asSharpStrong()
        switch (get(this.getValue())) {
@@ -100,7 +77,6 @@ public enum Note {
        default:
 	   return get(this.getValue());
        }
-
    }
 
    public Note asSharpStrong() {
