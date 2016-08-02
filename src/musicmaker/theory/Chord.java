@@ -12,8 +12,8 @@ public class Chord {
 
    private static final String CHORD_REGEX = "(?<key>[A-G](##?|bb?)?)(?<type>(m|M|dim|aug|mM)?)(?<add>([0-9]*)?)" +
       "(?<adjust>((((##?|bb?)|add|no[b#]?)[0-9]+)|sus[24])*)(?<bass>((/[A-G](##?|bb?)?)?|(/(##?|bb?)?[0-9]+)?))(?<adjust2>((((##?|bb?)|add|no(##?|bb?)?)[0-9]+)|sus[24])*)";
-   private static final String REDUCED_CHORD_REGEX = "[A-G][#b]?(m|M|dim|aug|mM)?([0-9]*)?((([#b]|add|no[b#]?)[0-9]+)|sus[24])*" +
-      "((/[A-G][#b]?)?|(/[b#]?[0-9]+)?)((([#b]|add|no[b#]?)[0-9]+)|sus[24])*";
+   private static final String REDUCED_CHORD_REGEX = "[A-G](##?|bb?)?(m|M|dim|aug|mM)?([0-9]*)?((((##?|bb?)|add|no[b#]?)[0-9]+)|sus[24])*" +
+      "((/[A-G](##?|bb?)?)?|(/(##?|bb?)?[0-9]+)?)((((##?|bb?)|add|no[b#]?)[0-9]+)|sus[24])*";
    private ArrayList<Note> notes;
    private static final String EMPTY_ID = "0";
    private String chordId;

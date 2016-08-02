@@ -62,7 +62,7 @@ public class MusicMaker extends Canvas implements Runnable {
       snd = new MusicPlayer();
       maxim = new Maxim();
 
-      define("D", "I", 12);
+      define("Eb", "I", 24);
 
       addKeyListener(key);
 
@@ -173,6 +173,7 @@ public class MusicMaker extends Canvas implements Runnable {
       key.update();
       level.update(xScroll, yScroll, this);
 
+      // chordPlayer[curPlayer].setVolume(1);
       chordPlayer[curPlayer].play();
       try {
          Thread.sleep(2000);

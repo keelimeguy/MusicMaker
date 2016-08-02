@@ -75,7 +75,8 @@ public class AudioThread extends Thread {
         if (audioGens.size() > 0) {
           for (int j=0;j<audioGens.size(); j++) {
             AudioGenerator ag = (AudioGenerator)audioGens.get(j);
-            val += ag.getSample();
+            if (ag != null)
+              val += ag.getSample();
           }
           val /= audioGens.size();
         }
@@ -87,11 +88,13 @@ public class AudioThread extends Thread {
   }
 
   public void addAudioGenerator(AudioGenerator ag) {
-    audioGens.add(ag);
+    if (ag != null)
+      audioGens.add(ag);
   }
 
   public void removeAudioGenerator(AudioGenerator ag) {
-    audioGens.remove(ag);
+    if (ag != null)
+      audioGens.remove(ag);
   }
 
   /**

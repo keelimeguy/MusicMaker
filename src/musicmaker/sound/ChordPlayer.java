@@ -14,11 +14,21 @@ public class ChordPlayer {
       this.maxim = maxim;
       this.chord = chord;
       waves = new WavetableSynth[chord.size()];
+      int octave = 4;
       for (int i = 0; i< waves.length; i++) {
          waves[i] = maxim.createWavetableSynth(516);
-         float freq = Pitch.findFreq(chord.getNote(i), 4);
+         if (i > 0 && chord.getNote(i).compareTo(chord.getNote(i-1)) < 0) {
+            //System.out.println(chord.getNote(i) + "<" + chord.getNote(i-1));
+            octave++;
+         }
+         float freq = Pitch.findFreq(chord.getNote(i), octave);
          waves[i].setFrequency(freq);
       }
+   }
+
+   public void setVolume(float volume) {
+      for (WavetableSynth wave: waves)
+         wave.volume(volume);
    }
 
    public void play() {

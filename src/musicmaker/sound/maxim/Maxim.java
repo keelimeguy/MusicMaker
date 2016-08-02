@@ -55,7 +55,10 @@ public class Maxim {
   public WavetableSynth createWavetableSynth(int size) {
     // this will load the complete audio file into memory
     WavetableSynth ap = new WavetableSynth(size, sampleRate);
-    audioThread.addAudioGenerator(ap);
+    if (ap == null)
+      System.out.println("Warning: s new WavetableSynth could not be created");
+    else
+      audioThread.addAudioGenerator(ap);
     // now we need to tell the audiothread
     // to ask the audioplayer for samples
     return ap;
