@@ -3,10 +3,12 @@ package musicmaker;
 import musicmaker.graphics.Screen;
 import musicmaker.theory.ProgressionMap;
 import musicmaker.theory.Progression;
+import musicmaker.sound.ChordPlayer;
 import musicmaker.input.Keyboard;
 import musicmaker.input.Mouse;
 import musicmaker.level.Level;
 import musicmaker.entity.Entity;
+import musicmaker.sound.maxim.Maxim;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -37,7 +39,10 @@ public class MusicMaker extends Canvas implements Runnable {
    private Level level;
    private Entity offset;
    private static MusicPlayer snd;
+   private Maxim maxim;
+   private ChordPlayer[] chordPlayer;
    private ProgressionMap progressionMap;
+   private Progression progression;
 
    // The image which will be drawn in the game window
    private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -54,9 +59,10 @@ public class MusicMaker extends Canvas implements Runnable {
       level = new Level(width, height);
       offset = new Entity(width / 2, height / 2);
 
-      define("C", "I", 6);
-
       snd = new MusicPlayer();
+      maxim = new Maxim();
+
+      define("D", "I", 12);
 
       addKeyListener(key);
 
@@ -70,8 +76,11 @@ public class MusicMaker extends Canvas implements Runnable {
       level.add(offset);
 
       progressionMap = new ProgressionMap(key, start);
-      Progression progression = progressionMap.generate(length);
+      progression = progressionMap.generate(length);
       progression.show();
+      chordPlayer = new ChordPlayer[length];
+      for (int i = 0; i < length; i ++)
+         chordPlayer[i] = new ChordPlayer(maxim, progression.next());
    }
 
    // Returns the width of the window with scaling.
@@ -125,15 +134,16 @@ public class MusicMaker extends Canvas implements Runnable {
          long now = System.nanoTime();
          delta += (now - lastTime) / ns;
          lastTime = now;
-
          // Update 60 times a second
          while (delta >= 1) {
             update();
+
+            Graphics g = getGraphics();
+            paint(g);
+
             updates++;
             delta--;
          }
-         Graphics g = getGraphics();
-         paint(g);
          frames++;
 
          // Keep track of and display the game's ups and fps every second
@@ -157,11 +167,22 @@ public class MusicMaker extends Canvas implements Runnable {
 
       key.update();
       level.update(xScroll, yScroll, this);
+
+      chordPlayer[curPlayer].play();
+      try {
+         Thread.sleep(2000);
+      } catch (InterruptedException ex) {
+         ex.printStackTrace();
+      }
+      chordPlayer[curPlayer].stop();
+      curPlayer++;
+      if (curPlayer >= chordPlayer.length) curPlayer = 0;
    }
 
    public void update(Graphics g) {
    }
 
+   int curPlayer = 0;
    public void paint(Graphics g) {
       // Clear the screen to black before rendering
       screen.clear(0);
@@ -172,14 +193,14 @@ public class MusicMaker extends Canvas implements Runnable {
       // Render the level with the given screen offset
       level.render(xScroll, yScroll, screen);
 
-      //g.drawText();
+      // Draw the image
+      g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+      g.drawString(progression + "", 50, 50);
+      g.drawString("currently playing: " + chordPlayer[curPlayer].getChord(), 50, 100);
+      g.dispose();
 
       // Copy the screen pixels to the image to be drawn
       System.arraycopy(screen.getPixels(), 0, pixels, 0, pixels.length);
-
-      // Draw the image
-      g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-      g.dispose();
    }
 
    public static void main(String[] args) {

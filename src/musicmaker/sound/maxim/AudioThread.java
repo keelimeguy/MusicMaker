@@ -90,6 +90,10 @@ public class AudioThread extends Thread {
     audioGens.add(ag);
   }
 
+  public void removeAudioGenerator(AudioGenerator ag) {
+    audioGens.remove(ag);
+  }
+
   /**
    * converts an array of 16 bit samples to bytes
    * in little-endian (low-byte, high-byte) format.
