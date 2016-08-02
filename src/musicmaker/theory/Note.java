@@ -1,9 +1,13 @@
 package musicmaker.theory;
 
 public enum Note {
-   // Ordered so that flats have precedence over sharps (but not over naturals)
-   A(0, "A"), BFLAT(1, "Bb"), ASHARP(1, "A#"), B(2, "B"), CFLAT(2, "Cb"), C(3, "C"), BSHARP(3, "B#"), DFLAT(4, "Db"), CSHARP(4, "C#"), D(5, "D"), EFLAT(6, "Eb"),
-    DSHARP(6, "D#"), E(7, "E"), FFLAT(7, "Fb"), F(8, "F"), ESHARP(8, "E#"), GFLAT(9, "Gb"), FSHARP(9, "F#"), G(10, "G"), AFLAT(11, "Ab"), GSHARP(11, "G#");
+   // Ordered so that flats have precedence over sharps
+   A(0, "A"), BFLATFLAT(0, "Bbb"), GSHARPSHARP(0, "G##"), BFLAT(1, "Bb"), ASHARP(1, "A#"), CFLATFLAT(1, "Cbb"),
+      B(2, "B"), CFLAT(2, "Cb"), ASHARPSHARP(2, "A##"), C(3, "C"), BSHARP(3, "B#"), DFLATFLAT(3, "Dbb"),
+      DFLAT(4, "Db"), CSHARP(4, "C#"), BSHARPSHARP(4, "B##"), D(5, "D"), EFLATFLAT(5, "Ebb"), CSHARPSHARP(5, "C##"),
+      EFLAT(6, "Eb"), DSHARP(6, "D#"), FFLATFLAT(6, "Fbb"), E(7, "E"), FFLAT(7, "Fb"), DSHARPSHARP(7, "D##"),
+      F(8, "F"), ESHARP(8, "E#"), GFLATFLAT(8, "Gbb"), GFLAT(9, "Gb"), FSHARP(9, "F#"), ESHARPSHARP(9, "E##"),
+      G(10, "G"), AFLATFLAT(10, "Abb"), FSHARPSHARP(10, "F##"), AFLAT(11, "Ab"), GSHARP(11, "G#");
 
    public static final int NUM_NOTES = 12;
    private final int val;
@@ -29,6 +33,18 @@ public enum Note {
    public Note doubleSharp() {
        return halfStep(2);
    }
+
+   public Note flatflat() {
+      return halfStep(-2);
+   }
+
+   public Note sharpsharp() {
+      return halfStep(2);
+   }
+
+   // public Note natural() {
+   //    return null;
+   // }
 
    // Return first note of the same value (to clean odd cases e.g. B# -> C)
    public Note normal() {
@@ -59,6 +75,10 @@ public enum Note {
       return null;
    }
 
+   public int getValue() { return val; }
+
+   public String getName() { return name; }
+
    public String toString() { return name; }
 
    // The following switch statements seem fine for now.
@@ -66,74 +86,81 @@ public enum Note {
 
    public Note asSharpWeak() {
        // Changing this may change asSharpStrong()
-       switch (this) {
-       case AFLAT:
-	   return GSHARP;
+       switch (get(this.getValue())) {
        case BFLAT:
 	   return ASHARP;
-       case CFLAT:
-	   return B;
        case DFLAT:
 	   return CSHARP;
        case EFLAT:
 	   return DSHARP;
+       case GFLAT:
+	   return FSHARP;
+       case AFLAT:
+	   return GSHARP;
        default:
-	   return this;
+	   return get(this.getValue());
        }
+
    }
 
    public Note asSharpStrong() {
-       Note asw = asSharpStrong();
+       Note asw = asSharpWeak();
        if (asw != this) {
-	   return asw;
+	   return asw.asSharpStrong(); // This should only recur once.
        }
        else {
-	   switch (this) {
+	   switch (get(this.getValue())) {
+	   case A:
+	       return GSHARPSHARP;
+	   case B:
+	       return ASHARPSHARP;
 	   case C:
 	       return BSHARP;
+	   case D:
+	       return CSHARPSHARP;
+	   case E:
+	       return DSHARPSHARP;
 	   case F:
 	       return ESHARP;
+	   case G:
+	       return FSHARPSHARP;
 	   default:
-	       return this;
+	       return this; // should never happen
+	       // TODO: put a way to detect this case when debugging.
 	   }
        }
    }
 
    public Note asFlatWeak() {
        // Changing this may change asFlatStrong()
-       switch (this) {
-       case ASHARP:
-	   return BFLAT;
-       case BSHARP:
-	   return C;
-       case CSHARP:
-	   return DFLAT;
-       case DSHARP:
-	   return EFLAT;
-       case ESHARP:
-	   return F;
-       case FSHARP:
-	   return GFLAT;
-       case GSHARP:
-	   return AFLAT;
-       default:
-	   return this;
-       }
+       // Note that this depends on the flat-preferring behavior of normal().
+       return this.normal();
    }
 
    public Note asFlatStrong() {
        Note afw = asFlatWeak();
        if (afw != this) {
-	   return afw;
+	   return afw.asFlatStrong(); // Will only recur once.
        }
        else {
 	   switch (this) {
+	   case A:
+	       return BFLATFLAT;
 	   case B:
 	       return CFLAT;
+	   case C:
+	       return DFLATFLAT;
+	   case D:
+	       return EFLATFLAT;
 	   case E:
 	       return FFLAT;
+	   case F:
+	       return GFLATFLAT;
+	   case G:
+	       return AFLATFLAT;
 	   default:
-	       return this;
+	       return this; // should never happen
+	       // TODO: put in a way to detect this case when debugging.
 	   }
        }
    }

@@ -10,7 +10,11 @@ ehthumbs.db
 *~
 
 # Class files
+=======
+# Compiled files
 *.class
+dist
+build
 
 # Folder config file
 Desktop.ini

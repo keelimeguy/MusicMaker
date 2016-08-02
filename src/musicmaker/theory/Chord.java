@@ -10,10 +10,10 @@ import java.lang.Math;
 
 public class Chord {
 
-   private static final String CHORD_REGEX = "(?<key>[A-G][#b]?)(?<type>(m|M|dim|aug|mM)?)(?<add>([0-9]*)?)" +
-      "(?<adjust>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)(?<bass>((/[A-G][#b]?)?|(/[0-9]+)?))(?<adjust2>((([#b]|add|no[b#]?)[0-9]+)|sus[24])*)";
+   private static final String CHORD_REGEX = "(?<key>[A-G](##?|bb?)?)(?<type>(m|M|dim|aug|mM)?)(?<add>([0-9]*)?)" +
+      "(?<adjust>((((##?|bb?)|add|no[b#]?)[0-9]+)|sus[24])*)(?<bass>((/[A-G](##?|bb?)?)?|(/(##?|bb?)?[0-9]+)?))(?<adjust2>((((##?|bb?)|add|no(##?|bb?)?)[0-9]+)|sus[24])*)";
    private static final String REDUCED_CHORD_REGEX = "[A-G][#b]?(m|M|dim|aug|mM)?([0-9]*)?((([#b]|add|no[b#]?)[0-9]+)|sus[24])*" +
-      "((/[A-G][#b]?)?|(/[0-9]+)?)((([#b]|add|no[b#]?)[0-9]+)|sus[24])*";
+      "((/[A-G][#b]?)?|(/[b#]?[0-9]+)?)((([#b]|add|no[b#]?)[0-9]+)|sus[24])*";
    private ArrayList<Note> notes;
    private static final String EMPTY_ID = "0";
    private String chordId;
@@ -109,19 +109,36 @@ public class Chord {
          if (adjust.length() != 0) {
 
             // First deal with omissions so that we don't overwrite other adjustments
-            String noBase = adjust.replaceAll("(((((?<!no)#)|((?<!no)b)|add)[0-9]+)|sus[24])*", "");
+            String noBase = adjust.replaceAll("((((?<!no)##|(?<!no)bb|add)[0-9]+)|sus[24])*", "");
+
+            // Yes this is an awful solution. Yes there's a better way: extract the regex we want instead of replacing what we don't...
+            // But I'm lazy and I'm going to work on something else instead of worrying about it
+            noBase = noBase.replaceAll("no##", "DS");
+            noBase = noBase.replaceAll("nobb", "DF");
+            noBase = noBase.replaceAll("((?<!no)#|(?<!no)b)[0-9]+", "");
+            noBase = noBase.replaceAll("DS", "no##");
+            noBase = noBase.replaceAll("DF", "nobb");
+
             for (String noSplit: noBase.split("no")) {
-               if (noSplit.length() != 0)
+               int baseStepAdjust = 0;
+               if (noSplit.length() != 0) {
                   if (noSplit.charAt(0) == 'b')
-                     notes.remove(root.halfStep(findStep(Integer.parseInt(noSplit.substring(1)))).flat());
+                     baseStepAdjust--;
                   else if (noSplit.charAt(0) == '#')
-                     notes.remove(root.halfStep(findStep(Integer.parseInt(noSplit.substring(1)))).sharp());
-                  else
-                     notes.remove(root.halfStep(findStep(Integer.parseInt(noSplit))));
+                     baseStepAdjust++;
+                  if (noSplit.length() > 1) {
+                     if (noSplit.charAt(1) == 'b')
+                        baseStepAdjust--;
+                     else if (noSplit.charAt(1) == '#')
+                        baseStepAdjust++;
+                  }
+                  noSplit = noSplit.replaceAll("[#b]", "");
+                  notes.remove(root.halfStep(findStep(Integer.parseInt(noSplit)) + baseStepAdjust));
+               }
             }
 
             // Next deal with the suspended third so that thirds added later aren't overwritten
-            String susBase = adjust.replaceAll("(([#b]|add|no[b#]?)[0-9]+)*", "");
+            String susBase = adjust.replaceAll("(((##?|bb?)|add|no(##?|bb?)?)[0-9]+)*", "");
             for (String susSplit: susBase.split("sus")) {
                if (susSplit.length() != 0) {
                      int nextStep = Integer.parseInt(susSplit);
@@ -135,29 +152,37 @@ public class Chord {
             }
 
             // Deal with sharps
-            String sharpBase = adjust.replaceAll("(((b|add|no[b#]?)[0-9]+)|sus[24])*", "");
-            for (String sharpSplit: sharpBase.split("#")) {
+            String sharpBase = adjust.replaceAll("(((bb?|add|no(##?|bb?)?)[0-9]+)|sus[24])*", "");
+            for (String sharpSplit: sharpBase.split("(?<!#)#")) {
+               int sharpStepAdjust = 1;
                if (sharpSplit.length() != 0) {
+                  if(sharpSplit.charAt(0) == '#')
+                     sharpStepAdjust = 2;
+                  sharpSplit = sharpSplit.replaceAll("#", "");
                   Note newNote = root.halfStep(findStep(Integer.parseInt(sharpSplit)));
                   // Remove existing note to be sharpened
                   notes.remove(newNote);
-                  add(newNote.sharp());
+                  add(newNote.halfStep(sharpStepAdjust));
                }
             }
 
             // Deal with flats
-            String flatBase = adjust.replaceAll("(((#|add|no[b#]?)[0-9]+)|sus[24])*", "");
-            for (String flatSplit: flatBase.split("b")) {
+            String flatBase = adjust.replaceAll("(((##?|add|no(##?|bb?)?)[0-9]+)|sus[24])*", "");
+            for (String flatSplit: flatBase.split("(?<!b)b")) {
+               int flatStepAdjust = -1;
                if (flatSplit.length() != 0) {
+                  if(flatSplit.charAt(0) == 'b')
+                     flatStepAdjust = -2;
+                  flatSplit = flatSplit.replaceAll("b", "");
                   Note newNote = root.halfStep(findStep(Integer.parseInt(flatSplit)));
                   // Remove existing note to be flattened
                   notes.remove(newNote);
-                  add(newNote.flat());
+                  add(newNote.halfStep(flatStepAdjust));
                }
             }
 
             // Deal with additions last so that additions aren't overwritten by flattening or sharpening
-            String addBase = adjust.replaceAll("((([#b]|no[b#]?)[0-9]+)|sus[24])*", "");
+            String addBase = adjust.replaceAll("((((##?|bb?)|no(##?|bb?)?)[0-9]+)|sus[24])*", "");
             for (String addSplit: addBase.split("add"))
                if (addSplit.length() != 0)
                   add(root.halfStep(findStep(Integer.parseInt(addSplit))));
@@ -165,10 +190,22 @@ public class Chord {
 
          Note bassNote = root;
 
-         if (bass.length() != 0) {
-            String bassId = bass.split("/")[1];
+         if (bass.length() > 1) {
+            int stepAdjust = 0;
+            if(bass.charAt(1) == 'b')
+               stepAdjust--;
+            else if(bass.charAt(1) == '#')
+               stepAdjust++;
+            if (bass.length() > 2) {
+               if(bass.charAt(2) == 'b')
+                  stepAdjust--;
+               else if(bass.charAt(2) == '#')
+                  stepAdjust++;
+            }
+            String bassId = bass.replaceAll("/(##?|bb?)?", "");
+
             if (bassId.charAt(0) >= '0' && bassId.charAt(0) <= '9')
-               bassNote = root.halfStep(findStep(Integer.parseInt(bassId)));
+               bassNote = root.halfStep(findStep(Integer.parseInt(bassId)) + stepAdjust);
             else {
                bassNote = Note.get(bassId);
                add(bassNote);

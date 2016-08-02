@@ -83,7 +83,7 @@ public class Progression {
       Note key = Note.get(args[0]);
       if (key == null) {
          System.err.println("Error: Invalid key ?<key>=\"" + args[0] +"\"" +
-            "\n\t<key> should match [A-G][#b]?");
+            "\n\t<key> should match [A-G](##?|bb?)?");
          System.exit(-1);
       }
 

@@ -2,7 +2,7 @@ package musicmaker.sound;
 
 /**
  *
- * @author Mangusbrother 
+ * @author Mangusbrother
  * with edits by keelimeguy
  */
 
@@ -33,7 +33,7 @@ public class MusicPlayer extends Thread implements LineListener {
 
    private URL location = null;
    private File file = null;
-   
+
    /**
     * this flag indicates whether the playback completes or not.
     */
