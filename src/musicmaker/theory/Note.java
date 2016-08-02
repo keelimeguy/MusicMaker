@@ -22,20 +22,8 @@ public enum Note {
       return halfStep(-1);
    }
 
-   public Note doubleFlat() {
-       return halfStep(-2);
-   }
-
    public Note sharp() {
       return halfStep(1);
-   }
-
-   // public Note natural() {
-   //    return null;
-   // }
-
-   public Note doubleSharp() {
-       return halfStep(2);
    }
 
    // Return first note of the same value (to clean odd cases e.g. B# -> C)
@@ -73,79 +61,83 @@ public enum Note {
 
    public String toString() { return name; }
 
-   // The following switch statements seem fine for now.
-   // It's possible they'll get way uglier if double-sharpness
-
    public Note asSharpWeak() {
        // Changing this may change asSharpStrong()
-       switch (this) {
-       case AFLAT:
-	   return GSHARP;
+       switch (get(this.getValue())) {
        case BFLAT:
 	   return ASHARP;
-       case CFLAT:
-	   return B;
        case DFLAT:
 	   return CSHARP;
        case EFLAT:
 	   return DSHARP;
+       case GFLAT:
+	   return FSHARP;
+       case AFLAT:
+	   return GSHARP;
        default:
-	   return this;
+	   return get(this.getValue());
        }
    }
 
    public Note asSharpStrong() {
        Note asw = asSharpWeak();
        if (asw != this) {
-	   return asw;
+	   return asw.asSharpStrong(); // This should only recur once.
        }
        else {
-	   switch (this) {
+	   switch (get(this.getValue())) {
+	   case A:
+	       return GSHARPSHARP;
+	   case B:
+	       return ASHARPSHARP;
 	   case C:
 	       return BSHARP;
+	   case D:
+	       return CSHARPSHARP;
+	   case E:
+	       return DSHARPSHARP;
 	   case F:
 	       return ESHARP;
+	   case G:
+	       return FSHARPSHARP;
 	   default:
-	       return this;
+	       return this; // should never happen
+	       // TODO: put a way to detect this case when debugging.
 	   }
        }
    }
 
    public Note asFlatWeak() {
        // Changing this may change asFlatStrong()
-       switch (this) {
-       case ASHARP:
-	   return BFLAT;
-       case BSHARP:
-	   return C;
-       case CSHARP:
-	   return DFLAT;
-       case DSHARP:
-	   return EFLAT;
-       case ESHARP:
-	   return F;
-       case FSHARP:
-	   return GFLAT;
-       case GSHARP:
-	   return AFLAT;
-       default:
-	   return this;
-       }
+       // Note that this depends on the flat-preferring behavior of normal().
+       return this.normal();
    }
 
    public Note asFlatStrong() {
        Note afw = asFlatWeak();
        if (afw != this) {
-	   return afw;
+	   return afw.asFlatStrong(); // Will only recur once.
        }
        else {
 	   switch (this) {
+	   case A:
+	       return BFLATFLAT;
 	   case B:
 	       return CFLAT;
+	   case C:
+	       return DFLATFLAT;
+	   case D:
+	       return EFLATFLAT;
 	   case E:
 	       return FFLAT;
+	   case F:
+	       return GFLATFLAT;
+	   case G:
+	       return AFLATFLAT;
 	   default:
-	       return this;
+	       return this; // should never happen
+	       // TODO: put in a way to detect this case when debugging.
 	   }
        }
    }
+}
