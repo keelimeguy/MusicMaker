@@ -1,7 +1,7 @@
 package musicmaker.theory;
 
 public enum Note {
-   // Ordered so that flats have precedence over sharps (but not naturals)
+   // Ordered so that flats have precedence over sharps (but not over naturals)
    C(0, "C"), BSHARP(0, "B#"), DFLATFLAT(0, "Dbb"), DFLAT(1, "Db"), CSHARP(1, "C#"), BSHARPSHARP(1, "B##"),
       D(2, "D"), EFLATFLAT(2, "Ebb"), CSHARPSHARP(2, "C##"), EFLAT(3, "Eb"), DSHARP(3, "D#"), FFLATFLAT(3, "Fbb"),
       E(4, "E"), FFLAT(4, "Fb"), DSHARPSHARP(4, "D##"), F(5, "F"), ESHARP(5, "E#"), GFLATFLAT(5, "Gbb"), GFLAT(6, "Gb"),
@@ -22,6 +22,10 @@ public enum Note {
       return halfStep(-1);
    }
 
+   public Note doubleFlat() {
+       return halfStep(-2);
+   }
+
    public Note sharp() {
       return halfStep(1);
    }
@@ -37,6 +41,10 @@ public enum Note {
    // public Note natural() {
    //    return null;
    // }
+
+   public Note doubleSharp() {
+       return halfStep(2);
+   }
 
    // Return first note of the same value (to clean odd cases e.g. B# -> C)
    public Note normal() {
@@ -72,4 +80,80 @@ public enum Note {
    public String getName() { return name; }
 
    public String toString() { return name; }
-}
+
+   // The following switch statements seem fine for now.
+   // It's possible they'll get way uglier if double-sharpness
+
+   public Note asSharpWeak() {
+       // Changing this may change asSharpStrong()
+       switch (this) {
+       case AFLAT:
+	   return GSHARP;
+       case BFLAT:
+	   return ASHARP;
+       case CFLAT:
+	   return B;
+       case DFLAT:
+	   return CSHARP;
+       case EFLAT:
+	   return DSHARP;
+       default:
+	   return this;
+       }
+   }
+
+   public Note asSharpStrong() {
+       Note asw = asSharpStrong();
+       if (asw != this) {
+	   return asw;
+       }
+       else {
+	   switch (this) {
+	   case C:
+	       return BSHARP;
+	   case F:
+	       return ESHARP;
+	   default:
+	       return this;
+	   }
+       }
+   }
+
+   public Note asFlatWeak() {
+       // Changing this may change asFlatStrong()
+       switch (this) {
+       case ASHARP:
+	   return BFLAT;
+       case BSHARP:
+	   return C;
+       case CSHARP:
+	   return DFLAT;
+       case DSHARP:
+	   return EFLAT;
+       case ESHARP:
+	   return F;
+       case FSHARP:
+	   return GFLAT;
+       case GSHARP:
+	   return AFLAT;
+       default:
+	   return this;
+       }
+   }
+
+   public Note asFlatStrong() {
+       Note afw = asFlatWeak();
+       if (afw != this) {
+	   return afw;
+       }
+       else {
+	   switch (this) {
+	   case B:
+	       return CFLAT;
+	   case E:
+	       return FFLAT;
+	   default:
+	       return this;
+	   }
+       }
+   }
