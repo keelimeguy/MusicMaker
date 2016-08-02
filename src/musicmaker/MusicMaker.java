@@ -78,6 +78,11 @@ public class MusicMaker extends Canvas implements Runnable {
       progressionMap = new ProgressionMap(key, start);
       progression = progressionMap.generate(length);
       progression.show();
+
+      if(chordPlayer != null)
+         for (int i = 0; i < length; i ++)
+            if (chordPlayer[i] != null)
+               chordPlayer[i].remove();
       chordPlayer = new ChordPlayer[length];
       for (int i = 0; i < length; i ++)
          chordPlayer[i] = new ChordPlayer(maxim, progression.next());
