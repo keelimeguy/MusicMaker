@@ -5,6 +5,7 @@ import musicmaker.graphics.Sprite;
 
 import java.util.Random;
 
+import java.awt.Graphics;
 import musicmaker.level.Level;
 import musicmaker.MusicMaker;
 
@@ -32,6 +33,9 @@ public class Entity {
 
       // Render the entity sprite
       screen.renderSprite(sprite, xx, yy);
+   }
+
+   public void render(Graphics g) {
    }
 
    public void remove() {

@@ -7,9 +7,9 @@ import java.util.Random;
 public class ProgressionMap {
 
    public enum Position {
-      I("I", 1, "", new String[]{"2","6","M7","M9","sus"}), iim("iim", 2, "m", new String[]{"m7","m9"}),
+      I("I", 1, "", new String[]{"2","6","M7","M9","sus4"}), iim("iim", 2, "m", new String[]{"m7","m9"}),
          iiim("iiim", 3, "m", new String[]{"m7"}), IV("IV", 4, "", new String[]{"6", "M7", "m", "m6"}),
-         V("V", 5, "", new String[]{"7","9","11","13","sus"}), vim("vim", 6, "m", new String[]{"m7", "m9"}),
+         V("V", 5, "", new String[]{"7","9","11","13","sus4"}), vim("vim", 6, "m", new String[]{"m7", "m9"}),
          Ibase3("I/3", 1, "/3", new String[]{}), Ibase5("I/5", 1, "/5", new String[]{}),
          IVbase1("IV/1", 4, "/1", new String[]{}), Vbase1("V/1", 5, "/1", new String[]{}),
 
@@ -49,6 +49,22 @@ public class ProgressionMap {
          }
          return new Chord("" + note + baseAdjust);
       }
+
+      public Chord getAdjustedChord(Note key, int i) {
+         if (!(i >= 0 && i < adjustments.length))
+            return getBaseChord(key);
+         double pos = Math.abs(rootPos);
+         Note note = key.halfStep(Chord.findStep((int)pos));
+         if ((double)((int)pos) != pos){
+            if (rootPos < 0)
+               note = note.flat();
+            else
+               note = note.sharp();
+         }
+         return new Chord("" + note + adjustments[i]);
+      }
+
+      public String[] getAdjustments() { return adjustments; }
 
       public static Position get(int ordinal) {
          if (ordinal >=0 && ordinal < Position.values().length)
@@ -155,7 +171,15 @@ public class ProgressionMap {
       return pos.getBaseChord(key);
    }
 
-   public Progression generate(int length, boolean loop) {
+   private Chord getRandomChordExtension(Position pos) {
+      Random rand = new Random();
+      String[] adj = pos.getAdjustments();
+      if (adj.length == 0)
+         return pos.getBaseChord(key);
+      return pos.getAdjustedChord(key, rand.nextInt(adj.length + 1));
+   }
+
+   public Progression generate(int length, boolean loop, boolean extension) {
       if (length <= 0) {
          System.err.println("Error: Invalid progression length ?<length>=\"" + length +"\"" +
                "\n\t<length> must be a number greater than zero");
@@ -169,14 +193,17 @@ public class ProgressionMap {
          Random rand = new Random();
          int next = rand.nextInt(map.outdegree(curPos.ordinal()));
          curPos = getNextPosition(map.adj(curPos.ordinal()).get(next));
-         progression.add(getChord(curPos));
+         if (extension) {
+            progression.add(getRandomChordExtension(curPos));
+         } else
+            progression.add(getChord(curPos));
       }
 
       return progression;
    }
 
    public Progression generate(int length) {
-      return generate(length, true);
+      return generate(length, true, false);
    }
 
    public String toString() {

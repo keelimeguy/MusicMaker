@@ -4,6 +4,7 @@ import musicmaker.graphics.Screen;
 import musicmaker.entity.Entity;
 import musicmaker.MusicMaker;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,12 @@ public class Level {
 
       for (int i = 0; i < entities.size(); i++) {
          entities.get(i).render(screen);
+      }
+   }
+
+   public void render(Graphics g) {
+      for (int i = 0; i < entities.size(); i++) {
+         entities.get(i).render(g);
       }
    }
 

@@ -36,6 +36,8 @@ public class Pitch {
 
    public float getFreq() { return freq; }
 
+   public Note getNote() { return note; }
+
    public String toString() {
       return "" + note + octave;
    }

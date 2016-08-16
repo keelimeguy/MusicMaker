@@ -6,15 +6,41 @@ import java.awt.event.KeyListener;
 public class Keyboard implements KeyListener {
 
    private boolean[] keys = new boolean[600];
-   public boolean up, down, left, right, q, e, n1, n2, n3, n4, n5, n6, n7, n8, n9, n0, space, shift, ctrl;
+   public boolean up, down, left, right, a, b, c, d, e, f, g, h, i, j, k, l, m, n,
+      o, p, q, r, s, t, u, v, w, x, y, z, n1, n2, n3, n4, n5, n6, n7, n8, n9, n0,
+      space, shift, ctrl, enter;
 
    public void update() {
       up = keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_W];
       down = keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_S];
       left = keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_A];
       right = keys[KeyEvent.VK_RIGHT] || keys[KeyEvent.VK_D];
-      q = keys[KeyEvent.VK_Q];
+      a = keys[KeyEvent.VK_A];
+      b = keys[KeyEvent.VK_B];
+      c = keys[KeyEvent.VK_C];
+      d = keys[KeyEvent.VK_D];
       e = keys[KeyEvent.VK_E];
+      f = keys[KeyEvent.VK_F];
+      g = keys[KeyEvent.VK_G];
+      h = keys[KeyEvent.VK_H];
+      i = keys[KeyEvent.VK_I];
+      j = keys[KeyEvent.VK_J];
+      k = keys[KeyEvent.VK_K];
+      l = keys[KeyEvent.VK_L];
+      m = keys[KeyEvent.VK_M];
+      n = keys[KeyEvent.VK_N];
+      o = keys[KeyEvent.VK_O];
+      p = keys[KeyEvent.VK_P];
+      q = keys[KeyEvent.VK_Q];
+      r = keys[KeyEvent.VK_R];
+      s = keys[KeyEvent.VK_S];
+      t = keys[KeyEvent.VK_T];
+      u = keys[KeyEvent.VK_U];
+      v = keys[KeyEvent.VK_V];
+      w = keys[KeyEvent.VK_W];
+      x = keys[KeyEvent.VK_X];
+      y = keys[KeyEvent.VK_Y];
+      z = keys[KeyEvent.VK_Z];
       n1 = keys[KeyEvent.VK_1];
       n2 = keys[KeyEvent.VK_2];
       n3 = keys[KeyEvent.VK_3];
@@ -28,6 +54,7 @@ public class Keyboard implements KeyListener {
       space = keys[KeyEvent.VK_SPACE];
       shift = keys[KeyEvent.VK_SHIFT];
       ctrl = keys[KeyEvent.VK_CONTROL];
+      enter = keys[KeyEvent.VK_ENTER];
    }
 
    public void keyPressed(KeyEvent e) {

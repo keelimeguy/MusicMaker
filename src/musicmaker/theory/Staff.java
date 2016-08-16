@@ -43,6 +43,11 @@ public class Staff {
    public int beatsPerMeasure() { return beatsPerMeasure; }
    public int beatType() { return beatType; }
 
+   public boolean isPitchRepeatedAtBeat(int beat) {
+      if (beat <= 0 || beat > numBeats) return false;
+      return getPitchBankAtBeat(beat).equals(getPitchBankAtBeat(beat-1));
+   }
+
    public PitchBank getPitchBankAtBeat(int beat) {
       if (beats.size() != pitches.size()) {
          System.out.println("Warning: Sizes of pitches and beats are not synchronized in the Staff");

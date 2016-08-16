@@ -27,3 +27,9 @@ From the "build/classes/" directory run:
 `java musicmaker.theory.ProgressionMap <key>` to show the graph used for generating the progression in the given key
 
 `java musicmaker.theory.Pitch <note> <octave>` to play the given note at the given octave
+
+`java musicmaker.theory.instrument.Ukulele <chord>` to show ukulele fret positions for the given chord
+
+`java musicmaker.theory.instrument.Guitar <chord>` to show guitar fret positions for the given chord
+
+`java musicmaker.sound.StaffPlayer <tempo> <beatsPerMeasure> <chord1> <length1> <chord2> <length2> ...` to play the given chords

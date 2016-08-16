@@ -31,4 +31,12 @@ public class PitchBank {
    public void add(Chord chord) {
       add(chord, 4);
    }
+
+   public String toString() {
+      String str = "";
+      if (pitches == null) return null;
+      for (Pitch pitch: pitches)
+         str += pitch + ", ";
+      return str.substring(0, str.length() - 2);
+   }
 }
