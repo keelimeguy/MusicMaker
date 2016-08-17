@@ -47,7 +47,33 @@ public class ProgressionMap {
             else
                note = note.sharp();
          }
-         return new Chord("" + note + baseAdjust);
+         String adjust = baseAdjust;
+         if (adjust.matches(".*/(##?|bb?)?[0-9]+")) {
+            int step = 0;
+            String orig = "";
+            if (adjust.indexOf("/") != 0)
+               orig = adjust.substring(0, adjust.indexOf("/"));
+            adjust = adjust.substring(adjust.indexOf("/"));
+            if (adjust.charAt(1) == '#') {
+               step++;
+               adjust = adjust.substring(2);
+            } else if (adjust.charAt(1) == 'b') {
+               step--;
+               adjust = adjust.substring(2);
+            } else
+               adjust = adjust.substring(1);
+
+            if (adjust.charAt(0) == '#') {
+               step++;
+               adjust = adjust.substring(1);
+            } else if (adjust.charAt(0) == 'b') {
+               step--;
+               adjust = adjust.substring(1);
+            }
+
+            adjust = orig + "/" + key.halfStep(Chord.findStep(Integer.parseInt(adjust)) + step);
+         }
+         return new Chord("" + note + adjust);
       }
 
       public Chord getAdjustedChord(Note key, int i) {
@@ -61,7 +87,10 @@ public class ProgressionMap {
             else
                note = note.sharp();
          }
-         return new Chord("" + note + adjustments[i]);
+         String adjust = adjustments[i];
+         // if (adjust.matches("/[0-9]+"))
+            // adjust = "/" + key.halfStep(Chord.findStep(Integer.parseInt(adjust.substring(1))));
+         return new Chord("" + note + adjust);
       }
 
       public String[] getAdjustments() { return adjustments; }
