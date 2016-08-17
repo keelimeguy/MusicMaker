@@ -39,6 +39,14 @@ public class Staff {
       numBeats += beatLength;
    }
 
+   public void add(Pitch pitch, int beatLength) {
+      PitchBank pitchBank = new PitchBank();
+      pitchBank.add(pitch);
+      beats.add(numBeats + 1);
+      pitches.add(pitchBank);
+      numBeats += beatLength;
+   }
+
    public int numBeats() { return numBeats; }
    public int beatsPerMeasure() { return beatsPerMeasure; }
    public int beatType() { return beatType; }

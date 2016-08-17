@@ -28,6 +28,8 @@ From the "build/classes/" directory run:
 
 `java musicmaker.theory.Pitch <note> <octave>` to play the given note at the given octave
 
+`java musicmaker.theory.Scale <key> <mode>` to play a scale in the given key and mode
+
 `java musicmaker.theory.instrument.Ukulele <chord>` to show ukulele fret positions for the given chord
 
 `java musicmaker.theory.instrument.Guitar <chord>` to show guitar fret positions for the given chord

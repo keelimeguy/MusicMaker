@@ -73,7 +73,7 @@ public class StaffPlayer implements ISubscriber {
       if (looping)
          metronome.start();
       else
-         metronome.start(staff.numBeats());
+         metronome.start(staff.numBeats() + 1);
       playing = true;
    }
 
@@ -182,6 +182,10 @@ public class StaffPlayer implements ISubscriber {
       beatNumber++;
       if (looping && beatNumber > staff.numBeats())
          beatNumber = 1;
+      else if (!looping && beatNumber > staff.numBeats()) {
+         stop();
+         return;
+      }
       PitchBank pitches = staff.getPitchBankAtBeat(beatNumber);
       if (staff.isPitchRepeatedAtBeat(beatNumber) && pitches != null && pitchesNowPlaying != null && pitches.equals(pitchesNowPlaying))
          return;

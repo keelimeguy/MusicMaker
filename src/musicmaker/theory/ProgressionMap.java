@@ -96,7 +96,7 @@ public class ProgressionMap {
       public String[] getAdjustments() { return adjustments; }
 
       public static Position get(int ordinal) {
-         if (ordinal >=0 && ordinal < Position.values().length)
+         if (ordinal >= 0 && ordinal < Position.values().length)
             return Position.values()[ordinal];
          return null;
       }
