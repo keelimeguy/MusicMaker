@@ -9,9 +9,9 @@ public class Scale {
    protected int[] intervals;
 
    public enum Mode {
-      // Selected preset modes for convenience. Note that most jazz scales
-      // are defined (including as chord symbols) as alterations of the
-      // Ionian scale.
+      // Note that many scales, foreign especially, have conflicting descriptions online
+      // Scales with differing ascending and descending lines are not supported
+
       Ionian("Ionian", new int[] { 0, 2, 4, 5, 7, 9, 11 }),
       Dorian("Dorian", new int[] { 0, 2, 3, 5, 7, 9, 10 }),
       Phrygian("Phrygian", new int[] { 0, 1, 3, 5, 7, 8, 10 }),
@@ -20,14 +20,61 @@ public class Scale {
       Aeolian("Aeolian", new int[] {0, 2, 3, 5, 7, 8, 10}),
       Locrian("Locrian", new int[] { 0, 1, 3, 5, 6, 8, 10 }),
 
-      Minor("Minor", new int[] {0, 2, 3, 5, 7, 8, 10}),
+      Major("Major", new int[] { 0, 2, 4, 5, 7, 9, 11 }),
+      NaturalMinor("NaturalMinor", new int[] {0, 2, 3, 5, 7, 8, 10 }),
       HarmonicMinor("HarmonicMinor", new int[] { 0, 2, 3, 5, 7, 8, 11 }),
       MelodicMinor("MelodicMinor", new int[] { 0, 2, 3, 5, 7, 9, 11 }),
-      HarmonicMajor("HarmonicMajor", new int[] { 0, 1, 4, 5, 7, 8, 11 }),
+
+      // Foreign scales from www.medianmusic.com/ScaleForeign.html
+      Algerian("Algerian", new int[] { 0, 2, 3, 5, 6, 7, 8, 11 }),
+      Arabian("Arabian", new int[] { 0, 2, 4, 5, 6, 8, 10 }),
+      Balinese("Balinese", new int[] { 0, 1, 3, 7, 8 }),
+      Byzantine("Byzantine", new int[] { 0, 1, 4, 5, 7, 8, 11 }),
+      Egyptian("Egyptian", new int[] { 0, 2, 5, 7, 10 }),
+      Ethiopian("Ethiopian", new int[] { 0, 2, 3, 5, 7, 8, 10 }),
+      Hungarian("Hungarian", new int[] { 0, 3, 4, 6, 7, 9, 10 }),
+      Israeli("Israeli", new int[] { 0, 1, 4, 5, 7, 8, 10 }),
+      Japanese("Japanese", new int[] { 0, 1, 5, 7, 8 }),
+      Javanese("Javanese", new int[] { 0, 1, 3, 5, 7, 9, 10 }),
+      Mongolian("Mongolian", new int[] { 0, 2, 4, 7, 9 }),
+      Persian("Persian", new int[] { 0, 1, 4, 5, 6, 8, 11 }),
+      Spanish("Spanish", new int[] { 0, 1, 4, 5, 7, 8, 10 }),
+
+      InSen("InSen", new int[] { 0, 1, 5, 7, 10 }),
+      Yo("Yo", new int[] { 0, 2, 5, 7, 9 }),
+      // naming of Hirajoshi modes from www.shredaholic.com/user48
+      Hirajoshi("Hirajoshi", new int[] { 0, 2, 3, 7, 8 }),
+      Iwato("Iwato", new int[] { 0, 1, 5, 6, 10 }),
+      Kumoi("Kumoi", new int[] { 0, 4, 5, 9, 11 }),
+      HonKumoi("HonKumoi", new int[] { 0, 1, 5, 7, 8 }),
+      Chinese("Chinese", new int[] { 0, 4, 6, 7, 11 }),
+
+      // Bebop scales from www.mattwarnockguitar.com/bebop-scale
+      BebopDominant("BebopDominant", new int[] { 0, 2, 4, 5, 7, 9, 10, 11 }),
+      BebopMinor("BebopMinor", new int[] { 0, 2, 3, 5, 7, 9, 10, 11 }),
+      BebopMajor("BebopMajor", new int[] { 0, 2, 4, 5, 7, 8, 9, 11 }),
+      BebopLydianDominant("BebopLydianDominant", new int[] { 0, 2, 4, 6, 7, 9, 10, 11 }),
+      BebopAltered("BebopAltered", new int[] { 0, 1, 4, 5, 7, 8, 10, 11 }),
+      BebopiiV("BebopiiV", new int[] { 0, 2, 4, 5, 6, 7, 9, 10, 11 }),
+      BebopAllanHoldsworth("BebopAllanHoldsworth", new int[] { 0, 2, 3, 4, 5, 7, 9, 10, 11 }),
+
+      HarmonicMajor("HarmonicMajor", new int[] { 0, 2, 4, 5, 7, 8, 11 }),
+      DoubleHarmonic("DoubleHarmonic", new int[] { 0, 1, 4, 5, 7, 8, 11 }),
+      Augmented("Augmented", new int[] { 0, 3, 4, 7, 8, 11 }),
+      Acoustic("Acoustic", new int[] { 0, 2, 4, 6, 7, 9, 10 }),
+      LydianAugmented("LydianAugmented", new int[] { 0, 2, 4, 6, 8, 9, 11 }),
+      LydianDominant("LydianDominant", new int[] { 0, 2, 4, 6, 7, 9, 10 }),
+      MajorBlues("MajorBlues", new int[] { 0, 2, 3, 4, 7, 9 }),
+      MinorBlues("MinorBlues", new int[] { 0, 3, 5, 6, 7, 10 }),
+      Neapolitan("Neapolitan", new int[] { 0, 1, 3, 5, 7, 9, 11 }),
+      NeapolitanMinor("NeapolitanMinor", new int[] { 0, 1, 3, 5, 7, 8, 11 }),
+
       WholeTone("WholeTone", new int[] { 0, 2, 4, 6, 8, 10 }),
+      TriTone("TriTone", new int[] { 0, 1, 4, 6, 7, 10 }),
       WHDiminished("WHDiminished", new int[] { 0, 2, 3, 5, 6, 8, 9, 11 }),
       HWDiminished("HWDiminished", new int[] { 0, 1, 3, 4, 6, 7, 9, 10 }),
       Pentatonic("Pentatonic", new int[] { 0, 2, 4, 7, 9 }),
+      PentatonicMinor("PentatonicMinor", new int[] { 0, 2, 3, 7, 8 }),
       Chromatic("Chromatic", new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
 
       protected final int[] intervals;
@@ -76,8 +123,7 @@ public class Scale {
       // Make a scale with the given intervals, starting from root.
       // Intervals must include 0 (or 12) explicitly.
       // For example, to get a whole-half diminished scale, you could do:
-      // [0, 2, 3, 5, 6, 8, 9, 11],
-      // representing the same thing that
+      // [0, 2, 3, 5, 6, 8, 9, 11]
 
       // The beauty of not checking the parameters for "correctness" here
       // is that you can make multi-octave scales. This allows oddities
@@ -177,7 +223,7 @@ public class Scale {
       Staff staff = new Staff(1, 1, 160);
       int octave = 4;
       // Creates an ascending then descending scale
-      staff.add(new Pitch(scale.getNote(1), octave ), 2);
+      staff.add(new Pitch(scale.getNote(1), octave), 2);
       for (int i = 2; i <= scale.numNotes(); i++) {
          if (scale.getNote(i).compareTo(scale.getNote(i-1)) < 0)
             octave++;
