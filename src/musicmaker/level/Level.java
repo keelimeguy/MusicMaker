@@ -1,7 +1,7 @@
 package musicmaker.level;
 
 import musicmaker.graphics.Screen;
-import musicmaker.entity.Entity;
+import musicmaker.level.entity.Entity;
 import musicmaker.MusicMaker;
 
 import java.awt.Graphics;

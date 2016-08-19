@@ -1,4 +1,4 @@
-package musicmaker.entity;
+package musicmaker.level.entity;
 
 import musicmaker.graphics.Screen;
 import musicmaker.graphics.Sprite;
@@ -34,11 +34,14 @@ public class UkuleleEntity extends Entity implements ISubscriber {
    }
 
    public void update(MusicMaker game) {
+      super.update(game);
    }
 
    public void render(Graphics g) {
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
+      if (isClicked())
+         g.setColor(Color.red);
       g.drawString("Ukulele fingerings: " + cur, x, y);
       if (notes != null) {
          if(frets.length != 4) return;

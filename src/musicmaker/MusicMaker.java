@@ -14,10 +14,17 @@ import musicmaker.theory.Metronome;
 import musicmaker.input.Keyboard;
 import musicmaker.input.Mouse;
 import musicmaker.level.Level;
-import musicmaker.entity.Entity;
-import musicmaker.entity.StaffEntity;
-import musicmaker.entity.UkuleleEntity;
-import musicmaker.entity.GuitarEntity;
+import musicmaker.level.entity.Entity;
+import musicmaker.level.entity.StaffEntity;
+import musicmaker.level.entity.UkuleleEntity;
+import musicmaker.level.entity.GuitarEntity;
+import musicmaker.level.entity.gui.PlayButton;
+import musicmaker.level.entity.gui.PauseButton;
+import musicmaker.level.entity.gui.StopButton;
+import musicmaker.level.entity.gui.ResetButton;
+import musicmaker.level.entity.gui.KeyAdjuster;
+import musicmaker.level.entity.gui.BeatAdjuster;
+import musicmaker.level.entity.gui.LengthAdjuster;
 import musicmaker.sound.maxim.Maxim;
 
 import java.awt.Canvas;
@@ -25,6 +32,7 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -34,9 +42,9 @@ import javax.swing.JFrame;
 public class MusicMaker extends Canvas implements Runnable {
    private static final long serialVersionUID = 1L;
 
-   private static int width = 300;
+   private static int width = 900;
    private static int height = width / 16 * 9;
-   private static int scale = 3; // The game will be scaled up by this factor
+   private static int scale = 1; // The game will be scaled up by this factor
    private static String title = "MusicMaker";
 
    private Thread thread;
@@ -79,12 +87,7 @@ public class MusicMaker extends Canvas implements Runnable {
 
       maxim = new Maxim();
 
-      startKey = "A";
-      start = "I";
-      length = 8;
-      beatsPerMeasure = 4;
-      beatType = 4;
-      tempo = 160;
+      restoreDefault();
       define();
 
       addKeyListener(key);
@@ -94,7 +97,16 @@ public class MusicMaker extends Canvas implements Runnable {
       addMouseMotionListener(mouse);
    }
 
-   private void define() {
+   public void restoreDefault() {
+      startKey = "A";
+      start = "I";
+      length = 8;
+      beatsPerMeasure = 4;
+      beatType = 4;
+      tempo = 160;
+   }
+
+   public void define() {
       level.empty();
       level.add(offset);
 
@@ -132,6 +144,21 @@ public class MusicMaker extends Canvas implements Runnable {
       level.add(staffEntity);
       level.add(ukuleleEntity);
       level.add(guitarEntity);
+
+      PlayButton playButton = new PlayButton(50, 440, 60, 20, 0xeeff00ff, this);
+      PauseButton pauseButton = new PauseButton(120, 440, 60, 20, 0xeeff00ff, this);
+      StopButton stopButton = new StopButton(190, 440, 60, 20, 0xeeff00ff, this);
+      BeatAdjuster beatAdjuster = new BeatAdjuster(50, 470, 130, 20, 0xeeff00ff, 0xee00ff00, 0xeeff0000, BeatAdjuster.Type.VERTICAL, this);
+      ResetButton resetButton = new ResetButton(190, 470, 60, 20, 0xeeff00ff, this);
+      KeyAdjuster keyAdjuster = new KeyAdjuster(280, 440, 250, 20, 0xeeff00ff, 0xee00ff00, 0xeeff0000, KeyAdjuster.Type.VERTICAL, this);
+      LengthAdjuster lengthAdjuster = new LengthAdjuster(280, 470, 250, 20, 0xeeff00ff, 0xee00ff00, 0xeeff0000, LengthAdjuster.Type.VERTICAL, this);
+      level.add(playButton);
+      level.add(pauseButton);
+      level.add(stopButton);
+      level.add(beatAdjuster);
+      level.add(resetButton);
+      level.add(keyAdjuster);
+      level.add(lengthAdjuster);
    }
 
    // Returns the width of the window with scaling.
@@ -219,29 +246,86 @@ public class MusicMaker extends Canvas implements Runnable {
       if (step >= 1) {
          step = anim = 0;
          if (key.space)
-            staffPlayer.play();
+            startPlayer();
          else if (key.shift) {
-            staffPlayer.play();
-            staffPlayer.pause();
-            staffPlayer.prevBeat();
-            metronome.tick();
+            playCurBeat();
          } else if (key.p)
-            staffPlayer.pause();
+            pausePlayer();
          else if (key.ctrl)
-            staffPlayer.stop();
+            stopPlayer();
          else if (key.right)
-            staffPlayer.nextBeat();
+            nextBeat();
          else if (key.left)
-            staffPlayer.prevBeat();
+            prevBeat();
          else if (key.up)
-            startKey = Note.get(startKey).sharp().getName();
+            setStartKey(Note.get(startKey).sharp().getName());
          else if (key.down)
-            startKey = Note.get(startKey).flat().getName();
+            setStartKey(Note.get(startKey).flat().getName());
          else if (key.enter)
             define();
       }
       // curPlayer++;
       // if (curPlayer >= chordPlayer.length) curPlayer = 0;
+   }
+
+   public String getStartKey() { return startKey; }
+
+   public void setStartKey(String startKey) {
+      this.startKey = startKey;
+   }
+
+   public void setStart(String start) {
+      this.start = start;
+   }
+
+   public void setLength(int length) {
+      this.length = length;
+   }
+
+   public void setBeatsPerMeasure(int beatsPerMeasure) {
+      this.beatsPerMeasure = beatsPerMeasure;
+   }
+
+   public void setBeatType(int beatType) {
+      this.beatType = beatType;
+   }
+
+   public void setTempo(int tempo) {
+      this.tempo = tempo;
+   }
+
+   public void setProgressionLength(int length) {
+      if (length > 0)
+         this.length = length;
+   }
+
+   public int getProgressionLength() { return length; }
+
+   public void startPlayer() {
+      staffPlayer.play();
+   }
+
+   public void playCurBeat() {
+      staffPlayer.play();
+      staffPlayer.pause();
+      staffPlayer.prevBeat();
+      metronome.tick();
+   }
+
+   public void pausePlayer() {
+      staffPlayer.pause();
+   }
+
+   public void stopPlayer() {
+      staffPlayer.stop();
+   }
+
+   public void nextBeat() {
+      staffPlayer.nextBeat();
+   }
+
+   public void prevBeat() {
+      staffPlayer.prevBeat();
    }
 
    public void update(Graphics g) {
@@ -275,14 +359,15 @@ public class MusicMaker extends Canvas implements Runnable {
       g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
       // Render directly to the graphics object
+      // This is a temporary thing
       level.render(g);
 
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
       g.drawString(progression + "", 50, 50);
-      g.drawString("space = start metronome     ctrl = stop playing     p = pause metronome", 50, 420);
-      g.drawString("left = previous beat     right = next beat     shift = play current beat", 50, 440);
-      g.drawString("up/down = adjust key     enter = new progression in " + startKey, 50, 460);
+      // g.drawString("space = start metronome     ctrl = stop playing     p = pause metronome", 50, 420);
+      // g.drawString("left = previous beat     right = next beat     shift = play current beat", 50, 440);
+      // g.drawString("up/down = adjust key     enter = new progression in " + startKey, 50, 460);
 
       g.dispose();
 
@@ -293,7 +378,7 @@ public class MusicMaker extends Canvas implements Runnable {
       System.setProperty("sun.awt.noerasebackground", "true");
       // Create the game
       MusicMaker game = new MusicMaker();
-      game.frame.setResizable(true);
+      game.frame.setResizable(false);
       game.frame.setTitle(MusicMaker.title);
       game.frame.add(game);
       game.frame.pack();

@@ -1,4 +1,4 @@
-package musicmaker.entity;
+package musicmaker.level.entity;
 
 import musicmaker.graphics.Screen;
 import musicmaker.graphics.Sprite;
@@ -26,11 +26,14 @@ public class StaffEntity extends Entity implements ISubscriber {
    }
 
    public void update(MusicMaker game) {
+      super.update(game);
    }
 
    public void render(Graphics g) {
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
+      if (isClicked())
+         g.setColor(Color.red);
       g.drawString("Notes Currently Playing: " + cur, x, y + 80);
       // Yeah its awful but its temporary
       g.drawString("Beat: " + player.getBeatInMeasure() + "   Measure: " + player.getMeasure(), x, y);

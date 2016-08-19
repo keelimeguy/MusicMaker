@@ -17,15 +17,15 @@ import javax.imageio.ImageIO;
 public class Sprite {
 
    public final int SIZE_X, SIZE_Y;
-   protected int x, y;
+   protected int x = 0, y = 0;
    protected int[] pixels;
    protected SpriteSheet sheet;
    protected String path;
 
    public Sprite(int size, int x, int y, SpriteSheet sheet) {
       SIZE_X = SIZE_Y = size;
-      this.x = x * size;
-      this.y = y * size;
+      this.x = x;
+      this.y = y;
       this.sheet = sheet;
       pixels = new int[SIZE_X * SIZE_Y];
       load();
@@ -34,8 +34,8 @@ public class Sprite {
    public Sprite(int sizex, int sizey, int x, int y, SpriteSheet sheet) {
       SIZE_X = sizex;
       SIZE_Y = sizey;
-      this.x = x * sizex;
-      this.y = y * sizey;
+      this.x = x;
+      this.y = y;
       this.sheet = sheet;
       pixels = new int[SIZE_X * SIZE_Y];
       load();
@@ -421,6 +421,14 @@ public class Sprite {
       for (int i = 0; i < SIZE_X * SIZE_Y; i++) {
          pixels[i] = color;
       }
+   }
+
+   protected void setX(int x) {
+      this.x = x;
+   }
+
+   protected void setY(int y) {
+      this.y = y;
    }
 
    protected void load() {

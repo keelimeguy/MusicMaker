@@ -1,7 +1,8 @@
-package musicmaker.entity;
+package musicmaker.level.entity;
 
 import musicmaker.graphics.Screen;
 import musicmaker.graphics.Sprite;
+import musicmaker.input.Mouse;
 
 import java.util.Random;
 
@@ -12,7 +13,7 @@ import musicmaker.MusicMaker;
 public class Entity {
 
    protected int x, y;
-   protected boolean removed = false;
+   protected boolean removed = false, clicked = false;
    protected Level level;
    protected Sprite sprite;
    protected final Random random = new Random();
@@ -23,13 +24,14 @@ public class Entity {
    }
 
    public void update(MusicMaker game) {
+      checkIfClicked(game.getWindowWidth(), game.getWindowHeight(), game.getScreen());
    }
 
    public void render(Screen screen) {
       if (sprite == null) return;
       // Offset the position to center the entity
-      int xx = x - sprite.SIZE_X / 2;
-      int yy = y - sprite.SIZE_Y / 2;
+      int xx = x;// - sprite.SIZE_X / 2;
+      int yy = y;// - sprite.SIZE_Y / 2;
 
       // Render the entity sprite
       screen.renderSprite(sprite, xx, yy);
@@ -52,6 +54,19 @@ public class Entity {
 
    public boolean isRemoved() {
       return removed;
+   }
+
+   public boolean isClicked() {
+      return clicked;
+   }
+
+   protected void checkIfClicked(int height, int width, Screen screen) {
+      if (Mouse.getB() < 0 || sprite == null || screen == null)
+         return;
+      if (Mouse.getX() > (x - screen.getXOffset() ) && Mouse.getX() < (sprite.SIZE_X + x - screen.getXOffset() ) && Mouse.getY() > (y - screen.getYOffset() ) && Mouse.getY() < (sprite.SIZE_Y - screen.getYOffset() + y))
+         clicked = true;
+      else
+         clicked = false;
    }
 
    public void init(Level level) {
