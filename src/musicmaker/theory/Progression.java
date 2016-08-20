@@ -28,6 +28,10 @@ public class Progression {
       chords.clear();
    }
 
+   public Chord get(int i) {
+      return chords.get(i);
+   }
+
    private void nextPos() {
       pos++;
       if (pos >= length()) {

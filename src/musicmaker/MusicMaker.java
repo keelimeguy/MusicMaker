@@ -18,6 +18,7 @@ import musicmaker.level.entity.Entity;
 import musicmaker.level.entity.StaffEntity;
 import musicmaker.level.entity.UkuleleEntity;
 import musicmaker.level.entity.GuitarEntity;
+import musicmaker.level.entity.ProgressionEntity;
 import musicmaker.level.entity.gui.PlayButton;
 import musicmaker.level.entity.gui.PauseButton;
 import musicmaker.level.entity.gui.StopButton;
@@ -35,8 +36,16 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
+import javax.swing.JOptionPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
 
 public class MusicMaker extends Canvas implements Runnable {
    private static final long serialVersionUID = 1L;
@@ -58,6 +67,7 @@ public class MusicMaker extends Canvas implements Runnable {
    private StaffEntity staffEntity;
    private UkuleleEntity ukuleleEntity;
    private GuitarEntity guitarEntity;
+   private ProgressionEntity progressionEntity;
    private Maxim maxim;
    // private ChordPlayer[] chordPlayer;
    private StaffPlayer staffPlayer;
@@ -134,6 +144,9 @@ public class MusicMaker extends Canvas implements Runnable {
       staffEntity = new StaffEntity(50, 20, staffPlayer);
       metronome.subscribe(staffEntity);
 
+      progressionEntity = new ProgressionEntity(50, 50, progression, staffPlayer);
+      metronome.subscribe(progressionEntity);
+
       ukuleleEntity = new UkuleleEntity(50, 140, new Ukulele(15), staffPlayer);
       metronome.subscribe(ukuleleEntity);
 
@@ -141,6 +154,7 @@ public class MusicMaker extends Canvas implements Runnable {
       metronome.subscribe(guitarEntity);
 
       level.add(staffEntity);
+      level.add(progressionEntity);
       level.add(ukuleleEntity);
       level.add(guitarEntity);
 
@@ -230,8 +244,8 @@ public class MusicMaker extends Canvas implements Runnable {
    // Update the game
    public void update() {
 
-      int xScroll = 0;//offset.getX() - screen.getWidth() / 2;
-      int yScroll = 0;//offset.getY() - screen.getHeight() / 2;
+      int xScroll = 1000;//offset.getX() - screen.getWidth() / 2;
+      int yScroll = 100;//offset.getY() - screen.getHeight() / 2;
 
       key.update();
       level.update(xScroll, yScroll, this);
@@ -357,16 +371,33 @@ public class MusicMaker extends Canvas implements Runnable {
 
       g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
-      g.setFont(new Font("Verdana", Font.BOLD, 15));
-      g.setColor(Color.yellow);
-      g.drawString(progression + "", 50, 50);
-      // g.drawString("space = start metronome     ctrl = stop playing     p = pause metronome", 50, 420);
-      // g.drawString("left = previous beat     right = next beat     shift = play current beat", 50, 440);
-      // g.drawString("up/down = adjust key     enter = new progression in " + startKey, 50, 460);
-
       g.dispose();
 
       bs.show();
+   }
+
+   public JMenuBar makeMenu(){
+      JMenuBar menu = new JMenuBar();
+      JMenu help = new JMenu("Help");
+      // help.setMnemonic(KeyEvent.VK_H);
+      // help.getAccessibleContext().setAccessibleDescription("");
+      menu.add(help);
+      JMenuItem menuItem = new JMenuItem("View Keyboard Shortcuts");
+      menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
+      menuItem.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+            showHelp();
+         }
+      });
+      help.add(menuItem);
+
+      return menu;
+   }
+
+   public void showHelp() {
+      JOptionPane.showMessageDialog(null, "space = start metronome     ctrl = stop playing     p = pause metronome" +
+         "\nleft = previous beat     right = next beat     shift = play current beat" +
+         "\nup/down = adjust key     enter = new progression with selected length and key");
    }
 
    public static void main(String[] args) {
@@ -376,6 +407,7 @@ public class MusicMaker extends Canvas implements Runnable {
       game.frame.setResizable(true);
       game.frame.setTitle(MusicMaker.title);
       game.frame.add(game);
+      game.frame.setJMenuBar(game.makeMenu());
       game.frame.pack();
       game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       game.frame.setLocationRelativeTo(null);

@@ -11,10 +11,10 @@ public class Keyboard implements KeyListener {
       space, shift, ctrl, enter;
 
    public void update() {
-      up = keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_W];
-      down = keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_S];
-      left = keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_A];
-      right = keys[KeyEvent.VK_RIGHT] || keys[KeyEvent.VK_D];
+      up = keys[KeyEvent.VK_UP];
+      down = keys[KeyEvent.VK_DOWN];
+      left = keys[KeyEvent.VK_LEFT];
+      right = keys[KeyEvent.VK_RIGHT];
       a = keys[KeyEvent.VK_A];
       b = keys[KeyEvent.VK_B];
       c = keys[KeyEvent.VK_C];
