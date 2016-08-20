@@ -37,12 +37,14 @@ public class UkuleleEntity extends Entity implements ISubscriber {
       super.update(game);
    }
 
-   public void render(Graphics g) {
+   public void render(int xOff, int yOff, Graphics g) {
+      int xx = x - xOff;
+      int yy = y - yOff;
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
       if (isClicked())
          g.setColor(Color.red);
-      g.drawString("Ukulele fingerings: " + cur, x, y);
+      g.drawString("Ukulele fingerings: " + cur, xx, yy);
       if (notes != null) {
          if(frets.length != 4) return;
          String[] strings = new String[4];
@@ -54,10 +56,10 @@ public class UkuleleEntity extends Entity implements ISubscriber {
                   if (fret < 10) strings[string] += "  ";
                }
          }
-         g.drawString("A: " + strings[3], x, y + 20);
-         g.drawString("E: " + strings[2], x, y + 40);
-         g.drawString("C: " + strings[1], x, y + 60);
-         g.drawString("G: " + strings[0], x, y + 80);
+         g.drawString("A: " + strings[3], xx, yy + 20);
+         g.drawString("E: " + strings[2], xx, yy + 40);
+         g.drawString("C: " + strings[1], xx, yy + 60);
+         g.drawString("G: " + strings[0], xx, yy + 80);
       }
    }
 

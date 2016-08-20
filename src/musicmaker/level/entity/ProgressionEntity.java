@@ -29,13 +29,15 @@ public class ProgressionEntity extends Entity implements ISubscriber {
       super.update(game);
    }
 
-   public void render(Graphics g) {
+   public void render(int xOff, int yOff, Graphics g) {
+      int xx = x - xOff;
+      int yy = y - yOff;
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
       if (isClicked())
          g.setColor(Color.red);
-      g.drawString(progression + "", x, y);
-      g.drawString("Playing: " + cur, x, y + 20);
+      g.drawString(progression + "", xx, yy);
+      g.drawString("Playing: " + cur, xx, yy + 20);
    }
 
    public void notify(Message message) {

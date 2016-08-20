@@ -60,16 +60,16 @@ public class Level {
 
       Graphics g = image.getGraphics();
 
-      render(g);
+      render(xScroll, yScroll, g);
 
       g.dispose();
 
       System.arraycopy(pixels, 0, screen.getPixels(), 0, screen.getPixels().length);
    }
 
-   public void render(Graphics g) {
+   public void render(int xOff, int yOff, Graphics g) {
       for (int i = 0; i < entities.size(); i++) {
-         entities.get(i).render(g);
+         entities.get(i).render(xOff, yOff,  g);
       }
    }
 

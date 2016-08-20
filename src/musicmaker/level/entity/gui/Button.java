@@ -53,12 +53,14 @@ public class Button extends Entity {
       }
    }
 
-   public void render(Graphics g) {
+   public void render(int xOff, int yOff, Graphics g) {
+      int xx = x - xOff;
+      int yy = y - yOff;
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
       if (isClicked())
          g.setColor(Color.red);
-      g.drawString(text, x + 5, y + sprite.SIZE_Y/2 + 5);
+      g.drawString(text, xx + 5, yy + sprite.SIZE_Y/2 + 5);
    }
 
    protected void checkIfClicked(int width, int height, Screen screen) {

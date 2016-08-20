@@ -8,7 +8,7 @@ public class Keyboard implements KeyListener {
    private boolean[] keys = new boolean[600];
    public boolean up, down, left, right, a, b, c, d, e, f, g, h, i, j, k, l, m, n,
       o, p, q, r, s, t, u, v, w, x, y, z, n1, n2, n3, n4, n5, n6, n7, n8, n9, n0,
-      space, shift, ctrl, enter;
+      np1, np2, np3, np4, np5, np6, np7, np8, np9, np0, space, shift, ctrl, enter;
 
    public void update() {
       up = keys[KeyEvent.VK_UP];
@@ -51,6 +51,16 @@ public class Keyboard implements KeyListener {
       n8 = keys[KeyEvent.VK_8];
       n9 = keys[KeyEvent.VK_9];
       n0 = keys[KeyEvent.VK_0];
+      np1 = keys[KeyEvent.VK_NUMPAD1];
+      np2 = keys[KeyEvent.VK_NUMPAD2];
+      np3 = keys[KeyEvent.VK_NUMPAD3];
+      np4 = keys[KeyEvent.VK_NUMPAD4];
+      np5 = keys[KeyEvent.VK_NUMPAD5];
+      np6 = keys[KeyEvent.VK_NUMPAD6];
+      np7 = keys[KeyEvent.VK_NUMPAD7];
+      np8 = keys[KeyEvent.VK_NUMPAD8];
+      np9 = keys[KeyEvent.VK_NUMPAD9];
+      np0 = keys[KeyEvent.VK_NUMPAD0];
       space = keys[KeyEvent.VK_SPACE];
       shift = keys[KeyEvent.VK_SHIFT];
       ctrl = keys[KeyEvent.VK_CONTROL];

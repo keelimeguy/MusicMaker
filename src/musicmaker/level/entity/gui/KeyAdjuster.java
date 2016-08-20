@@ -77,8 +77,8 @@ public class KeyAdjuster extends AdjusterButton {
       setText("New Progression in Key: " + game.getStartKey());
    }
 
-   public void render(Graphics g) {
-      super.render(g);
+   public void render(int xOff, int yOff, Graphics g) {
+      super.render(xOff, yOff, g);
    }
 
    public void render(Screen screen) {

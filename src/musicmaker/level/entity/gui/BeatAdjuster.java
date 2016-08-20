@@ -77,8 +77,8 @@ public class BeatAdjuster extends AdjusterButton {
       setText("Play Beat");
    }
 
-   public void render(Graphics g) {
-      super.render(g);
+   public void render(int xOff, int yOff, Graphics g) {
+      super.render(xOff, yOff, g);
    }
 
    public void render(Screen screen) {

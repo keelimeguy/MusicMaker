@@ -113,6 +113,7 @@ public class MusicMaker extends Canvas implements Runnable {
       beatsPerMeasure = 4;
       beatType = 4;
       tempo = 160;
+      offset = new Entity(width / 2, height / 2);
    }
 
    public void define() {
@@ -244,8 +245,8 @@ public class MusicMaker extends Canvas implements Runnable {
    // Update the game
    public void update() {
 
-      int xScroll = 1000;//offset.getX() - screen.getWidth() / 2;
-      int yScroll = 100;//offset.getY() - screen.getHeight() / 2;
+      int xScroll = offset.getX() - screen.getWidth() / 2;
+      int yScroll = offset.getY() - screen.getHeight() / 2;
 
       key.update();
       level.update(xScroll, yScroll, this);
@@ -258,11 +259,14 @@ public class MusicMaker extends Canvas implements Runnable {
       if (anim % speed == speed - 1) step++;
       if (step >= 1) {
          step = anim = 0;
-         if (key.space)
+         if (key.r) {
+            restoreDefault();
+            define();
+         } else if (key.space)
             startPlayer();
-         else if (key.shift) {
+         else if (key.shift)
             playCurBeat();
-         } else if (key.p)
+         else if (key.p)
             pausePlayer();
          else if (key.ctrl)
             stopPlayer();
@@ -277,8 +281,17 @@ public class MusicMaker extends Canvas implements Runnable {
          else if (key.enter)
             define();
       }
-      // curPlayer++;
-      // if (curPlayer >= chordPlayer.length) curPlayer = 0;
+
+      // Controls offset of graphics, useful to see long progressions that go off screen perhaps.
+      // Not going to tell the user about these key shortcuts in help menu though.. Numlock must be on.
+      if (key.np8)
+         offset.setY(offset.getY() - 4);
+      else if (key.np2)
+         offset.setY(offset.getY() + 4);
+      if (key.np4)
+         offset.setX(offset.getX() - 4);
+      else if (key.np6)
+         offset.setX(offset.getX() + 4);
    }
 
    public String getStartKey() { return startKey; }
@@ -358,13 +371,13 @@ public class MusicMaker extends Canvas implements Runnable {
       // Clear the screen to black before rendering
       screen.clear(0);
 
-      int xScroll = 0;//offset.getX() - screen.getWidth() / 2;
-      int yScroll = 0;//offset.getY() - screen.getHeight() / 2;
+      int xScroll = offset.getX() - screen.getWidth() / 2;
+      int yScroll = offset.getY() - screen.getHeight() / 2;
 
       Graphics g = bs.getDrawGraphics();
 
       // Render the level to the screen with the given screen offset
-      level.render(xScroll, yScroll, this);
+      level.render(-xScroll, -yScroll, this);
 
       // Copy the screen pixels to the image to be drawn
       System.arraycopy(screen.getPixels(), 0, pixels, 0, pixels.length);
@@ -382,7 +395,7 @@ public class MusicMaker extends Canvas implements Runnable {
       // help.setMnemonic(KeyEvent.VK_H);
       // help.getAccessibleContext().setAccessibleDescription("");
       menu.add(help);
-      JMenuItem menuItem = new JMenuItem("View Keyboard Shortcuts");
+      JMenuItem menuItem = new JMenuItem("View Keyboard Shortcuts"/*, KeyEvent.VK_S*/);
       menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
       menuItem.addActionListener(new ActionListener() {
          public void actionPerformed(ActionEvent e) {
@@ -397,11 +410,12 @@ public class MusicMaker extends Canvas implements Runnable {
    public void showHelp() {
       JOptionPane.showMessageDialog(null, "space = start metronome     ctrl = stop playing     p = pause metronome" +
          "\nleft = previous beat     right = next beat     shift = play current beat" +
-         "\nup/down = adjust key     enter = new progression with selected length and key");
+         "\nup/down = adjust key     enter = new progression     r = reset defaults");
    }
 
    public static void main(String[] args) {
       System.setProperty("sun.awt.noerasebackground", "true");
+
       // Create the game
       MusicMaker game = new MusicMaker();
       game.frame.setResizable(true);

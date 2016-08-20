@@ -37,11 +37,19 @@ public class Entity {
       screen.renderSprite(sprite, xx, yy);
    }
 
-   public void render(Graphics g) {
+   public void render(int xOff, int yOff, Graphics g) {
    }
 
    public void remove() {
       removed = true;
+   }
+
+   public void setX(int x) {
+      this.x = x;
+   }
+
+   public void setY(int y) {
+      this.y = y;
    }
 
    public int getX() {

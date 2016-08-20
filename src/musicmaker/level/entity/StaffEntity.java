@@ -29,14 +29,16 @@ public class StaffEntity extends Entity implements ISubscriber {
       super.update(game);
    }
 
-   public void render(Graphics g) {
+   public void render(int xOff, int yOff, Graphics g) {
+      int xx = x - xOff;
+      int yy = y - yOff;
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
       if (isClicked())
          g.setColor(Color.red);
-      g.drawString("Notes Currently Playing: " + cur, x, y + 80);
+      g.drawString("Notes Currently Playing: " + cur, xx, yy + 80);
       // Yeah its awful but its temporary
-      g.drawString("Beat: " + player.getBeatInMeasure() + "   Measure: " + player.getMeasure(), x, y);
+      g.drawString("Beat: " + player.getBeatInMeasure() + "   Measure: " + player.getMeasure(), xx, yy);
    }
 
    public void notify(Message message) {

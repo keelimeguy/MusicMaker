@@ -64,10 +64,10 @@ public class AdjusterButton extends Button {
       incrementButton.update(game);
    }
 
-   public void render(Graphics g) {
-      super.render(g);
-      decrementButton.render(g);
-      incrementButton.render(g);
+   public void render(int xOff, int yOff, Graphics g) {
+      super.render(xOff, yOff, g);
+      decrementButton.render(xOff, yOff, g);
+      incrementButton.render(xOff, yOff, g);
    }
 
    public void render(Screen screen) {
