@@ -32,7 +32,6 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -351,16 +350,12 @@ public class MusicMaker extends Canvas implements Runnable {
       Graphics g = bs.getDrawGraphics();
 
       // Render the level to the screen with the given screen offset
-      level.render(xScroll, yScroll, screen);
+      level.render(xScroll, yScroll, this);
 
       // Copy the screen pixels to the image to be drawn
       System.arraycopy(screen.getPixels(), 0, pixels, 0, pixels.length);
 
       g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-
-      // Render directly to the graphics object
-      // This is a temporary thing
-      level.render(g);
 
       g.setFont(new Font("Verdana", Font.BOLD, 15));
       g.setColor(Color.yellow);
@@ -378,7 +373,7 @@ public class MusicMaker extends Canvas implements Runnable {
       System.setProperty("sun.awt.noerasebackground", "true");
       // Create the game
       MusicMaker game = new MusicMaker();
-      game.frame.setResizable(false);
+      game.frame.setResizable(true);
       game.frame.setTitle(MusicMaker.title);
       game.frame.add(game);
       game.frame.pack();

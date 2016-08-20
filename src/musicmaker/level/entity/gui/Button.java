@@ -61,10 +61,10 @@ public class Button extends Entity {
       g.drawString(text, x + 5, y + sprite.SIZE_Y/2 + 5);
    }
 
-   protected void checkIfClicked(int height, int width, Screen screen) {
+   protected void checkIfClicked(int width, int height, Screen screen) {
       if (sprite == null || screen == null)
          return;
-      if (Mouse.getB() > 0 && Mouse.getX() > (x - screen.getXOffset() ) && Mouse.getX() < (sprite.SIZE_X + x - screen.getXOffset() ) && Mouse.getY() > (y - screen.getYOffset() ) && Mouse.getY() < (sprite.SIZE_Y - screen.getYOffset() + y))
+      if (Mouse.getB() > 0 && Mouse.getX() > (x - screen.getXOffset()) * width / screen.getWidth() && Mouse.getX() < (sprite.SIZE_X + x - screen.getXOffset()) * width / screen.getWidth() && Mouse.getY() > (y - screen.getYOffset()) * height / screen.getHeight() && Mouse.getY() < (sprite.SIZE_Y - screen.getYOffset() + y)  * height / screen.getHeight())
          clicked = true;
       else
          clicked = false;
