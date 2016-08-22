@@ -12,6 +12,8 @@ From the "src/" directory run:
 
 `ant run` to compile the code then run the generated .jar file
 
+`ant warnings` to compile while showing all compiler warnings
+
 `ant clean` to remove files created from compiling
 
 - Compiled class files will be moved to the "build/classes/" directory
