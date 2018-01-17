@@ -34,7 +34,7 @@ public class PitchBank {
 
    public String toString() {
       String str = "";
-      if (pitches == null) return null;
+      if (pitches == null || pitches.size() == 0) return null;
       for (Pitch pitch: pitches)
          str += pitch + ", ";
       return str.substring(0, str.length() - 2);

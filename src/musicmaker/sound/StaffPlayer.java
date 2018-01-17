@@ -2,10 +2,15 @@ package musicmaker.sound;
 
 import java.util.ArrayList;
 import java.lang.Integer;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import musicmaker.message.ISubscriber;
 import musicmaker.message.Message;
 import musicmaker.theory.Staff;
+import musicmaker.theory.Note;
 import musicmaker.theory.PitchBank;
 import musicmaker.theory.Pitch;
 import musicmaker.theory.Chord;
@@ -224,54 +229,134 @@ public class StaffPlayer implements ISubscriber {
    }
 
    public static void main(String[] args) {
-      if (args.length < 4 || args.length % 2 != 0) {
-         System.err.println("Usage: java StaffPlayer <tempo> <beatsPerMeasure> <chord1> <length1> <chord2> <length2> ...");
+      if ((args.length < 4 || args.length % 2 != 0) && args.length != 1) {
+         System.err.println("Usage: java StaffPlayer <file> \n\tor\njava StaffPlayer <tempo> <beatsPerMeasure> <chord1> <length1> <chord2> <length2> ...");
          System.exit(-1);
       }
 
-      if (!args[0].matches("[0-9]+") || Integer.parseInt(args[0]) == 0) {
-         System.err.println("Error: Invalid tempo ?<tempo>=\"" + args[0] +"\"" +
-            "\n\t<tempo> must be a number greater than 0, recommended to not exceed 468");
-         System.exit(-1);
-      }
+      if (args.length!=1) {
 
-      if (!args[1].matches("[0-9]+") || Integer.parseInt(args[1]) == 0) {
-         System.err.println("Error: Invalid value ?<beatsPerMeasure>=\"" + args[1] +"\"" +
-            "\n\t<beatsPerMeasure> must be a number greater than 0");
-         System.exit(-1);
-      }
-
-      Maxim maxim = new Maxim();
-      Metronome metronome = new Metronome();
-
-      Staff staff = new Staff(Integer.parseInt(args[1]), 1, Integer.parseInt(args[0]));
-      int octave = 4;
-
-      for (int i = 0; i < args.length/2 - 1; i ++) {
-         PitchBank bank = new PitchBank();
-         /*octave = */bank.add(new Chord(args[(i + 1)*2]), octave);
-         String length = args[(i + 1)*2 + 1];
-         if (!length.matches("[0-9]+") || Integer.parseInt(length) == 0) {
-            System.err.println("Error: Invalid length ?<length>=\"" + length +"\" for argument "+ ((i + 2)*2) +
-               "\n\t<length> must be a number greater than 0");
+         if (!args[0].matches("[0-9]+") || Integer.parseInt(args[0]) == 0) {
+            System.err.println("Error: Invalid tempo ?<tempo>=\"" + args[0] +"\"" +
+               "\n\t<tempo> must be a number greater than 0, recommended to not exceed 468");
             System.exit(-1);
          }
-         staff.add(bank, Integer.parseInt(length));
-      }
 
-      StaffPlayer staffPlayer = new StaffPlayer(maxim, staff);
-      staffPlayer.init(metronome);
-      staffPlayer.setLooping(true);
-      staffPlayer.play();
-      System.out.println("\nTo stop playing: terminate the command (possibly Ctrl+C) or close the command line console");
-      System.out.print("Currently playing beat ");
-      while (true) {
-         int beat = staffPlayer.getBeatInMeasure();
-         String next = beat + "/" + staffPlayer.getBeatsPerMeasure() + " of measure " + staffPlayer.getMeasure() + " containing: " + staff.getPitchBankAtBeat(staffPlayer.getBeat()) +
-            "                    ";
-         System.out.print(next);
-         for (int i = 0; i < next.length(); i++)
-            System.out.print("\b");
+         if (!args[1].matches("[0-9]+") || Integer.parseInt(args[1]) == 0) {
+            System.err.println("Error: Invalid value ?<beatsPerMeasure>=\"" + args[1] +"\"" +
+               "\n\t<beatsPerMeasure> must be a number greater than 0");
+            System.exit(-1);
+         }
+
+         Maxim maxim = new Maxim();
+         Metronome metronome = new Metronome();
+
+         Staff staff = new Staff(Integer.parseInt(args[1]), 1, Integer.parseInt(args[0]));
+         int octave = 4;
+
+         for (int i = 0; i < args.length/2 - 1; i ++) {
+            PitchBank bank = new PitchBank();
+            /*octave = */bank.add(new Chord(args[(i + 1)*2]), octave);
+            String length = args[(i + 1)*2 + 1];
+            if (!length.matches("[0-9]+") || Integer.parseInt(length) == 0) {
+               System.err.println("Error: Invalid length ?<length>=\"" + length +"\" for argument "+ ((i + 2)*2) +
+                  "\n\t<length> must be a number greater than 0");
+               System.exit(-1);
+            }
+            staff.add(bank, Integer.parseInt(length));
+         }
+
+         StaffPlayer staffPlayer = new StaffPlayer(maxim, staff);
+         staffPlayer.init(metronome);
+         staffPlayer.setLooping(true);
+         staffPlayer.play();
+         System.out.println("\nTo stop playing: terminate the command (possibly Ctrl+C) or close the command line console");
+         System.out.print("Currently playing beat ");
+         while (true) {
+            int beat = staffPlayer.getBeatInMeasure();
+            String next = beat + "/" + staffPlayer.getBeatsPerMeasure() + " of measure " + staffPlayer.getMeasure() + " containing: " + staff.getPitchBankAtBeat(staffPlayer.getBeat()) +
+               "                    ";
+            System.out.print(next);
+            for (int i = 0; i < next.length(); i++)
+               System.out.print("\b");
+         }
+      } else {
+         BufferedReader reader = null;
+         boolean done;
+         String[] line = null;
+         try {
+            reader = new BufferedReader(new FileReader(args[0]));
+         } catch (FileNotFoundException e) {
+            System.err.println("File "+args[0]+" not found");
+            System.exit(-1);
+         }
+         done = false;
+         try {
+            line = reader.readLine().split(" ");
+         } catch (IOException e) {
+            System.err.println("Invalid file format");
+            System.exit(-1);
+         }
+         if (line.length != 2) {
+            System.err.println("Invalid file format");
+            System.exit(-1);
+         }
+
+         if (!line[0].matches("[0-9]+") || Integer.parseInt(line[0]) == 0) {
+            System.err.println("Error: Invalid tempo ?<tempo>=\"" + line[0] +"\"" +
+               "\n\t<tempo> must be a number greater than 0, recommended to not exceed 468");
+            System.exit(-1);
+         }
+
+         if (!line[1].matches("[0-9]+") || Integer.parseInt(line[1]) == 0) {
+            System.err.println("Error: Invalid value ?<beatsPerMeasure>=\"" + line[1] +"\"" +
+               "\n\t<beatsPerMeasure> must be a number greater than 0");
+            System.exit(-1);
+         }
+
+         Maxim maxim = new Maxim();
+         Metronome metronome = new Metronome();
+
+         Staff staff = new Staff(Integer.parseInt(line[1]), 1, Integer.parseInt(line[0]));
+         int octave = 4;
+
+         try {
+            while (!done) {
+               line = reader.readLine().split(" ");
+               if (line.length == 1 && line[0].equals("end")) {
+                  done = true;
+               } else {
+                  PitchBank bank = new PitchBank();
+                  String length = line[0];
+                  if (!length.matches("[0-9]+") || Integer.parseInt(length) == 0) {
+                     System.err.println("Invalid file format");
+                     System.exit(-1);
+                  }
+                  for (int i = 1; i < line.length; i ++) {
+                     /*octave = */bank.add(new Pitch(Note.get(line[i]), Integer.parseInt(line[++i])));
+                  }
+                  staff.add(bank, Integer.parseInt(length));
+               }
+            }
+         } catch (IOException e) {
+            System.err.println("Invalid file format");
+            System.exit(-1);
+         }
+
+         StaffPlayer staffPlayer = new StaffPlayer(maxim, staff);
+         staffPlayer.init(metronome);
+         staffPlayer.setLooping(true);
+         staffPlayer.play();
+         System.out.println("\nTo stop playing: terminate the command (possibly Ctrl+C) or close the command line console");
+         System.out.print("Currently playing beat ");
+         while (true) {
+            int beat = staffPlayer.getBeatInMeasure();
+            String next = beat + "/" + staffPlayer.getBeatsPerMeasure() + " of measure " + staffPlayer.getMeasure() + " containing: " + staff.getPitchBankAtBeat(staffPlayer.getBeat()) +
+               "                    ";
+            System.out.print(next);
+            for (int i = 0; i < next.length(); i++)
+               System.out.print("\b");
+         }
       }
    }
 }
