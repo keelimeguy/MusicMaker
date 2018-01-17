@@ -38,6 +38,8 @@ public class Pitch {
 
    public Note getNote() { return note; }
 
+   public int getOctave() { return octave; }
+
    public String toString() {
       return "" + note + octave;
    }

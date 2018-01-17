@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Guitar extends StringInstrument{
 
    public Guitar (int frets) {
-      super(frets, 6, new String[]{"E", "A", "D", "G", "B", "E"});
+      super(frets, 6, new String[]{"E", "A", "D", "G", "B", "E"}, new int[] {3, 3, 4, 4, 4, 5});
    }
 
    public static void main(String[] args) {

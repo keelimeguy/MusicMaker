@@ -66,7 +66,7 @@ public class GuitarEntity extends Entity implements ISubscriber {
    }
 
    public void notify(Message message) {
-      ArrayList<Pitch> pitches = player.getPitchListAtBeat(player.getBeat());
+      ArrayList<Pitch> pitches = player.getPitchListAtBeat(player.getBeat(), 0);
       cur = "";
       notes.clear();
       if (pitches == null || pitches.isEmpty()) return;

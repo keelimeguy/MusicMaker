@@ -39,18 +39,20 @@ From the "build/classes/" directory run:
 `java musicmaker.sound.StaffPlayer <tempo> <beatsPerMeasure> <chord1> <length1> <chord2> <length2> ...` to play the given chords
 
 `java musicmaker.sound.StaffPlayer <file>` to play the sequence in the given file
-	file format (see samples/):
-		<tempo> <beatsPerMeasure> <numThreads>
-		[{ <groups>]
-		<length> [<pitch> <octave>] [<pitch> <octave>] ..
-		..
-		[,]
-		<length> [<pitch> <octave>] [<pitch> <octave>] ..
-		..
-		[,]
-		..
-		[}]
-		[{ <groups>]
-		..
-		[}]
+	file format (see samples/):<br>
+		\<tempo> \<beatsPerMeasure> \<numThreads><br>
+		[{ \<groups>]<br>
+		\<length> [\<pitch> \<octave>] [\<pitch> \<octave>] ..<br>
+		..<br>
+		[,]<br>
+		\<length> [\<pitch> \<octave>] [\<pitch> \<octave>] ..<br>
+		..<br>
+		[,]<br>
+		..<br>
+		[}]<br>
+		[{ \<groups>]<br>
+		..<br>
+		[}]<br>
 		end
+
+`java musicmaker.theory.instrument.ConvertTool <instrument> <file>` to convert the given file of the above format to fret positions for the given instrument type ("-g" for guitar, "-u" for ukulele, "-lu" for low g ukulele)

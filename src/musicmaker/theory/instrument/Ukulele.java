@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class Ukulele extends StringInstrument{
 
-   public Ukulele (int frets) {
-      super(frets, 4, new String[]{"G", "C", "E", "A"});
+   public Ukulele (int frets, boolean lowG) {
+      super(frets, 4, new String[]{"G", "C", "E", "A"}, new int[] {lowG?3:4, 4, 4, 4});
    }
 
    public static void main(String[] args) {
@@ -16,7 +16,7 @@ public class Ukulele extends StringInstrument{
          System.err.println("Usage: java Ukulele <chord>");
          System.exit(-1);
       }
-      Ukulele ukulele = new Ukulele(15);
+      Ukulele ukulele = new Ukulele(15, false);
 
       Chord chord = new Chord(args[0]);
 

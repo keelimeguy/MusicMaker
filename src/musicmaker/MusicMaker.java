@@ -148,7 +148,7 @@ public class MusicMaker extends Canvas implements Runnable {
       progressionEntity = new ProgressionEntity(50, 50, progression, staffPlayer);
       metronome.subscribe(progressionEntity);
 
-      ukuleleEntity = new UkuleleEntity(50, 140, new Ukulele(15), staffPlayer);
+      ukuleleEntity = new UkuleleEntity(50, 140, new Ukulele(15, false), staffPlayer);
       metronome.subscribe(ukuleleEntity);
 
       guitarEntity = new GuitarEntity(50, 260, new Guitar(21), staffPlayer);
