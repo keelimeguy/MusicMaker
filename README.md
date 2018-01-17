@@ -39,5 +39,18 @@ From the "build/classes/" directory run:
 `java musicmaker.sound.StaffPlayer <tempo> <beatsPerMeasure> <chord1> <length1> <chord2> <length2> ...` to play the given chords
 
 `java musicmaker.sound.StaffPlayer <file>` to play the sequence in the given file
-	file format: <tempo> <beatsPerMeasure> <newline> [newline] <length> [<pitch1> <octave>] .. [newline] <length> [<pitch2> <octave>] .. end
-		where [newline] is an optional line break (<newline> not optional) and signifies that the following pitches will all start at the subsequent beat in the song and multiple newlines may be put in a row when separated by a <length>, <octave> is an optional numerical input used to change the octave, and "end" is placed at the end of the sequence in the file. Other text may appear after end but is ignored. At the moment, pitches are supported, but not chords.
+	file format (see samples/):
+		<tempo> <beatsPerMeasure> <numThreads>
+		[{ <groups>]
+		<length> [<pitch> <octave>] [<pitch> <octave>] ..
+		..
+		[,]
+		<length> [<pitch> <octave>] [<pitch> <octave>] ..
+		..
+		[,]
+		..
+		[}]
+		[{ <groups>]
+		..
+		[}]
+		end
