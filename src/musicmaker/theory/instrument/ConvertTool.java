@@ -83,49 +83,14 @@ public class ConvertTool implements ISubscriber {
          return;
       }
       PitchBank[] pitches = new PitchBank[staff.length];
-      // boolean valid = false;
-      // for (int i = 0; i < staff.length; i ++) {
-      //    pitches[i] = staff[i].getPitchBankAtBeat(beatNumber);
-      //    if (staff[i].isPitchRepeatedAtBeat(beatNumber) && pitches[i] != null && pitchesNowPlaying[i] != null && pitches[i].equals(pitchesNowPlaying[i])) {
-      //       System.out.println("Thread " + i + ": held");
-      //       if (valid && i == staff.length-1)
-      //          System.out.println();
-      //       valid = false;
-      //       continue;
-      //    }
-
-      //    if (valid == false) {
-      //       valid = true;
-      //       System.out.println();
-      //    }
-
-      //    pitchesNowPlaying[i] = pitches[i];
-      //    if (pitches[i] != null && pitches[i].toString() != null) {
-      //       ArrayList<Integer>[] frets = instrument.findOrderedFretsForPitchBank(pitches[i]);
-      //       String cur = "Thread " + i + ": " + pitches[i];
-      //       String[] strings = new String[instrument.getNumStrings()];
-      //       for (int string = 0; string < strings.length; string++) {
-      //          strings[string] = "";
-      //          if(frets[string] != null)
-      //             for (Integer fret: frets[string]) {
-      //                strings[string] += fret + (fret>=10?"      ":"       ");
-      //             }
-      //       }
-      //       System.out.println(cur);
-      //       for (int s = strings.length; s > 0; s--)
-      //          System.out.println(instrument.getNoteOnFretOfString(0, s) + ": " + strings[s-1]);
-      //    } else
-      //       System.out.println("Thread " + i + ": null");
-
-      //    if (i == staff.length-1) {
-      //       System.out.println();
-      //       valid = false;
-      //    }
-      // }
 
       ArrayList<Integer>[] frets = (ArrayList<Integer>[]) new ArrayList[instrument.getNumStrings()];
       for (int i = 0; i < frets.length; i ++) {
          frets[i] = new ArrayList<Integer>();
+      }
+      ArrayList<Integer>[] specificFrets = (ArrayList<Integer>[]) new ArrayList[instrument.getNumStrings()];;
+      for (int i = 0; i < specificFrets.length; i ++) {
+         specificFrets[i] = new ArrayList<Integer>();
       }
       String cur = "M="+(beatNumber/staff[0].beatsPerMeasure()) + ",b=" + (beatNumber%staff[0].beatsPerMeasure() - 1) + ": ";
       boolean[] repeat = new boolean[staff.length];
@@ -142,10 +107,20 @@ public class ConvertTool implements ISubscriber {
 
          pitchesNowPlaying[i] = pitches[i];
          if (pitches[i] != null && pitches[i].toString() != null) {
-            ArrayList<Integer>[] newFrets = instrument.findOrderedFretsForPitchBank(pitches[i]);
+            ArrayList<Integer>[] newSpecificFrets = instrument.findOrderedFretsForPitchBank(pitches[i]);
+            ArrayList<Note> notes = new ArrayList<Note>();
+            for (Pitch pitch : pitches[i].getPitchList())
+               notes.add(pitch.getNote());
+            ArrayList<Integer>[] newFrets = instrument.findOrderedFretsForNotes(notes);
             for (int f = 0; f < newFrets.length; f ++) {
                if (f < frets.length && newFrets[f] != null)
-                  frets[f].addAll(newFrets[f]);
+                  for (Integer fret : newFrets[f])
+                     if (!frets[f].contains(fret))
+                        frets[f].add(fret);
+            }
+            for (int f = 0; f < newSpecificFrets.length; f ++) {
+               if (f < specificFrets.length && newSpecificFrets[f] != null)
+                  specificFrets[f].addAll(newSpecificFrets[f]);
             }
             cur += pitches[i] + "   ";
          }
@@ -166,7 +141,10 @@ public class ConvertTool implements ISubscriber {
          strings[string] = "";
          if(frets[string] != null)
             for (Integer fret: frets[string]) {
-               strings[string] += fret + (fret>=10?"      ":"       ");
+               if (specificFrets[string].contains(fret))
+                  strings[string] += fret + (fret>=10?"      ":"       ");
+               else
+                  strings[string] += "("+fret+")" + (fret>=10?"    ":"     ");
             }
       }
 
