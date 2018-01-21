@@ -32,9 +32,9 @@ From the "build/classes/" directory run:
 
 `java musicmaker.theory.Scale <key> <mode>` to play a scale in the given key and mode
 
-`java musicmaker.theory.instrument.Ukulele <chord>` to show ukulele fret positions for the given chord
+`java musicmaker.theory.instrument.Ukulele [type] <chord|note>` to show ukulele fret positions for the given chord or note w/ [type] = '-c', '-n', '-lc', or '-ln' (l for low g, c for chord, n for note)
 
-`java musicmaker.theory.instrument.Guitar <chord>` to show guitar fret positions for the given chord
+`java musicmaker.theory.instrument.Guitar [type] <chord|note>` to show guitar fret positions for the given chord or note w/ [type] = '-c' or '-n' (c for chord, n for note)
 
 `java musicmaker.sound.StaffPlayer <tempo> <beatsPerMeasure> <chord1> <length1> <chord2> <length2> ...` to play the given chords
 
@@ -56,3 +56,7 @@ From the "build/classes/" directory run:
 		end
 
 `java musicmaker.theory.instrument.ConvertTool <instrument> <file>` to convert the given file of the above format to fret positions for the given instrument type ("-g" for guitar, "-u" for ukulele, "-lu" for low g ukulele)
+
+From the "python_tools/" directory run:
+
+`python mus_to_tab.py [-h] <-t TAB> <-j JAVA_DIR> [-v] <-f FILE> <-o OUT>` to convert a file from the custom format above to a pdf tab sheet

@@ -12,22 +12,42 @@ public class Guitar extends StringInstrument{
    }
 
    public static void main(String[] args) {
-      if (args.length != 1) {
-         System.err.println("Usage: java Guitar <chord>");
+      if (args.length != 1 && args.length != 2) {
+         System.err.println("Usage: java Guitar [type] <chord|note>\n\tw/ [type] = '-c' or '-n'");
          System.exit(-1);
       }
+
+      boolean ischord = !(args.length == 2 && args[0].equals("-n"));
+
       Guitar guitar = new Guitar(21);
 
-      Chord chord = new Chord(args[0]);
+      ArrayList<Integer>[] frets = null;
+      String cur = "";
 
-      ArrayList<Integer>[] frets = guitar.findOrderedFretsForChord(chord);
-      if(frets.length != 6)
-         System.exit(-1);
+      if (ischord) {
+         Chord chord = new Chord(args[args.length-1]);
 
-      String cur = "Notes in chord:  ";
-      for (Note note: chord.getNotesList())
-         cur += note + ", ";
-      cur = cur.substring(0, cur.length()-2);
+         frets = guitar.findOrderedFretsForChord(chord);
+
+         if(frets.length != 6)
+            System.exit(-1);
+
+         cur = "Notes in chord:  ";
+         for (Note note: chord.getNotesList())
+            cur += note + ", ";
+         cur = cur.substring(0, cur.length()-2);
+
+      } else {
+         ArrayList<Note> notes = new ArrayList<Note>();
+         notes.add(Note.get(args[args.length-1]));
+
+         frets = guitar.findOrderedFretsForNotes(notes);
+
+         if(frets.length != 6)
+            System.exit(-1);
+
+         cur = "Note:  " + args[args.length-1];
+      }
 
       String[] strings = new String[6];
       for (int string = 0; string < 6; string++) {
@@ -37,6 +57,7 @@ public class Guitar extends StringInstrument{
                strings[string] += fret + "       ";
             }
       }
+
       System.out.println(cur);
       System.out.println("E: " + strings[5]);
       System.out.println("B: " + strings[4]);

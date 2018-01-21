@@ -1,4 +1,6 @@
 *.pdf
+*.tex
+*.gz
 
 # Windows image file caches
 Thumbs.db

@@ -92,7 +92,7 @@ public class ConvertTool implements ISubscriber {
       for (int i = 0; i < specificFrets.length; i ++) {
          specificFrets[i] = new ArrayList<Integer>();
       }
-      String cur = "M="+(beatNumber/staff[0].beatsPerMeasure()) + ",b=" + (beatNumber%staff[0].beatsPerMeasure() - 1) + ": ";
+      String cur = "M="+(beatNumber/staff[0].beatsPerMeasure()) + " b=" + (beatNumber%staff[0].beatsPerMeasure() - 1) + " : ";
       boolean[] repeat = new boolean[staff.length];
       for (int i = 0; i < staff.length; i ++) {
          repeat[i] = false;
