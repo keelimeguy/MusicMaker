@@ -5,6 +5,7 @@ from subprocess import *
 
 header = """\\documentclass{article}
 \\usepackage{musixtex,graphicx}
+\\usepackage[margin=1in]{geometry}
 
 % custom clef
 \\newcommand\\TAB[1]{%
