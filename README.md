@@ -40,7 +40,7 @@ From the "build/classes/" directory run:
 
 `java musicmaker.sound.StaffPlayer <file>` to play the sequence in the given file
 	file format (see samples/):<br>
-		\<tempo> \<beatsPerMeasure> \<numThreads><br>
+		\<tempo> \<beatsPerMeasure> \<numThreads> \<quarterLength><br>
 		[{ \<groups>]<br>
 		\<length> [\<pitch> \<octave>] [\<pitch> \<octave>] ..<br>
 		..<br>

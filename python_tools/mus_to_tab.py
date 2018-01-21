@@ -96,85 +96,164 @@ if __name__ == "__main__":
     beats = []
     current_dir = os.getcwd()
     if args.file and os.path.isfile(os.path.join(current_dir,args.file)):
-        if args.out:
-            with open(os.path.join(current_dir,args.file),"r") as f:
-                with open(os.path.join(current_dir,args.out),"w") as o:
-                    o.write(header)
-                    jargs = ['-cp', args.java_dir, classname, instrument,args.file]
-                    result = jarWrapper(*jargs)
-                    lastMeasure = -1
-                    lastBeat = -1
-                    string = 1
-                    inNotes = False
-                    catch_up_str = ""
-                    for r in result:
-                        if args.verbose:
-                            print(r)
-                        r = r.split()
-                        if len(r)>0:
-                            if r[0][0] == 'M':
-                                measure = int(r[0].split("=")[1])
-                                beat = int(r[1].split("=")[1])
+        with open(os.path.join(current_dir,args.file),"r") as f:
+            line = f.readline().split()
+            max_beats = int(line[1])
+            quarter_beat = int(line[3])
+    else:
+        print("Could not find file: {}".format(args.file))
+        exit()
 
-                                if len(r)>2:
-                                    if inNotes:
-                                        o.write(" & " + catch_up_str + "\\en\n");
-                                        catch_up_str = ""
-                                        inNotes = False
-                                    values = r[3:]
-                                    last_octave = 0
-                                    for i in range(len(values)):
-                                        value = values[i].split(",")[0]
-                                        note = value[0]
-                                        accidental = ""
-                                        if value[1] == "#":
-                                            value = value[1:]
-                                            accidental = "^"
-                                        elif value[1] == "b":
-                                            value = value[1:]
-                                            accidental = "_"
-                                        octave = int(value[1:])
-                                        if note < 'C':
-                                            octave -= 1
-                                        else:
-                                            octave -= 2
-                                        oct_str = ""
-                                        if octave > 0:
-                                            oct_str = (octave-last_octave)*'\''
-                                            last_octave = octave
-                                        if i == len(values)-1:
-                                            catch_up_str += "\\wh{" + oct_str+accidental+note + "}"
-                                        else:
-                                            catch_up_str += "\\zw{" + oct_str+accidental+note + "}"
+    if args.out:
+        with open(os.path.join(current_dir,args.out),"w") as o:
 
-                                if measure != lastMeasure and lastMeasure != -1:
-                                    o.write(" \\bar\n")
-                                    # for i in range(beat):
-                                    #     o.write("   \\Notes\\en\n")
-                                # elif beat != lastBeat and lastBeat != -1:
-                                    # for i in range(beat - lastBeat):
-                                    #     o.write("   \\Notes\\en\n")
-                                lastMeasure = measure
-                                lastBeat = beat
-                                string = 1
-                            elif len(r)>1:
-                                if not inNotes:
-                                    o.write("   \\Notes\\hsk")
-                                inNotes = True
-                                if "(" in r[1]:
-                                    r[1] = r[1].split("(")[1].split(")")[0]
-                                o.write("\\str{" + str(string) + "}{" + r[1] + "}")
-                                string += 1
-                    if inNotes:
-                        o.write(" & " + catch_up_str + "\\en\n");
-                    o.write("""  \\endpiece
+            o.write(header)
+            jargs = ['-cp', args.java_dir, classname, instrument,args.file]
+            result = jarWrapper(*jargs)
+            lastMeasure = -1
+            lastBeat = -1
+            beat = 0
+            string = 1
+            inNotes = False
+            catch_up_str = []
+            for r in result:
+                if args.verbose:
+                    print(r)
+                r = r.split()
+                if len(r)>0:
+                    if r[0][0] == 'M':
+                        measure = int(r[0].split("=")[1])
+                        beat = int(r[1].split("=")[1])
+
+                        if len(r)>2:
+                            if inNotes:
+                                measureDiff = measure-lastMeasure
+                                if measureDiff >= 1:
+                                    beatDiff = measureDiff*max_beats - lastBeat + beat
+                                else:
+                                    beatDiff = beat-lastBeat
+                                if beatDiff == 0:
+                                    beatDiff = max_beats
+                                if beatDiff <= quarter_beat:
+                                    noteHead = "\\zq"
+                                    noteHeadMain = "\\qa"
+                                else:
+                                    noteHead = "\\zh"
+                                    noteHeadMain = "\\ha"
+
+                                if beatDiff >= max_beats:
+                                    noteHeadMain = "\\wh"
+                                    noteHead = "\\zw"
+                                elif beatDiff >= max_beats/2:
+                                    noteHeadMain = "\\ha"
+                                elif beatDiff >= max_beats/4:
+                                    noteHeadMain = "\\qa"
+                                elif beatDiff >= max_beats/8:
+                                    noteHeadMain = "\\ca"
+                                elif beatDiff >= max_beats/16:
+                                    noteHeadMain = "\\cca"
+                                elif beatDiff >= max_beats/32:
+                                    noteHeadMain = "\\ccca"
+                                elif beatDiff >= max_beats/64:
+                                    noteHeadMain = "\\cccca"
+                                elif beatDiff >= max_beats/128:
+                                    noteHeadMain = "\\ccccca"
+
+                                o.write(" & ");
+                                for i in range(len(catch_up_str)):
+                                    if i != len(catch_up_str)-1:
+                                        o.write(noteHead+catch_up_str[i]);
+                                    else:
+                                        o.write(noteHeadMain+catch_up_str[i] + "\\en\n");
+                                catch_up_str = []
+                                inNotes = False
+                            values = r[3:]
+                            last_octave = 0
+                            for i in range(len(values)):
+                                value = values[i].split(",")[0]
+                                note = value[0]
+                                accidental = ""
+                                if value[1] == "#":
+                                    value = value[1:]
+                                    accidental = "^"
+                                elif value[1] == "b":
+                                    value = value[1:]
+                                    accidental = "_"
+                                octave = int(value[1:])
+                                if note < 'C':
+                                    octave -= 1
+                                else:
+                                    octave -= 2
+                                oct_str = ""
+                                if octave > 0:
+                                    oct_str = (octave-last_octave)*'\''
+                                    last_octave = octave
+                                if i == len(values)-1:
+                                    catch_up_str.append("{" + oct_str+accidental+note + "}")
+                                else:
+                                    catch_up_str.append("{" + oct_str+accidental+note + "}")
+
+                        if measure != lastMeasure and lastMeasure != -1:
+                            o.write(" \\bar\n")
+                        lastMeasure = measure
+                        lastBeat = beat
+                        string = 1
+                    elif len(r)>1:
+                        if not inNotes:
+                            o.write("   \\Notes\\hsk")
+                        inNotes = True
+                        if "(" in r[1]:
+                            r[1] = r[1].split("(")[1].split(")")[0]
+                        o.write("\\str{" + str(string) + "}{" + r[1] + "}")
+                        string += 1
+            if inNotes:
+                beat = max_beats-lastBeat
+                measureDiff = measure-lastMeasure
+                if measureDiff >= 1:
+                    beatDiff = measureDiff*max_beats - lastBeat + beat
+                else:
+                    beatDiff = beat-lastBeat
+                if beatDiff == 0:
+                    beatDiff = max_beats
+                if beatDiff <= quarter_beat:
+                    noteHead = "\\zq"
+                    noteHeadMain = "\\qa"
+                else:
+                    noteHead = "\\zh"
+                    noteHeadMain = "\\ha"
+
+                if beatDiff >= max_beats:
+                    noteHeadMain = "\\wh"
+                    noteHead = "\\zw"
+                elif beatDiff >= max_beats/2:
+                    noteHeadMain = "\\ha"
+                elif beatDiff >= max_beats/4:
+                    noteHeadMain = "\\qa"
+                elif beatDiff >= max_beats/8:
+                    noteHeadMain = "\\ca"
+                elif beatDiff >= max_beats/16:
+                    noteHeadMain = "\\cca"
+                elif beatDiff >= max_beats/32:
+                    noteHeadMain = "\\ccca"
+                elif beatDiff >= max_beats/64:
+                    noteHeadMain = "\\cccca"
+                elif beatDiff >= max_beats/128:
+                    noteHeadMain = "\\ccccca"
+
+
+                o.write(" & ");
+                for i in range(len(catch_up_str)):
+                    if i != len(catch_up_str)-1:
+                        o.write(noteHead+catch_up_str[i]);
+                    else:
+                        o.write(noteHeadMain+catch_up_str[i] + "\\en\n");
+
+            o.write("""  \\endpiece
 \\end{music}
 
 \\end{document}
 """)
-        else:
-            print("Could not find file: {}".format(args.out))
     else:
-        print("Could not find file: {}".format(args.file))
+        print("Could not find file: {}".format(args.out))
 
     exit()

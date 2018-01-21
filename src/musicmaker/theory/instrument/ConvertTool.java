@@ -185,7 +185,7 @@ public class ConvertTool implements ISubscriber {
       }
       try {
          line = reader.readLine().split(" ");
-         if (line.length != 3) {
+         if (line.length != 4) {
             System.err.println("Invalid file format");
             System.exit(-1);
          }
