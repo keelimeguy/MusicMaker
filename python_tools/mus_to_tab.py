@@ -176,7 +176,7 @@ if __name__ == "__main__":
                                                         connect_type = beatDiff
                                                         noteHeadMain = "\\qb0"
                                                     else:
-                                                        noteHeadMain = "\\ibu0l0\\qb0"
+                                                        noteHeadMain = "\\ibu0o0\\qb0"
                                                         connected_note = True
                                                         connect_type = beatDiff
                                                 else:
@@ -213,20 +213,25 @@ if __name__ == "__main__":
                                                         if connect_type > max_beats/16:
                                                             if (measure + 1 == temp_measure and max_beats - beat != beatDiff) or (measure == temp_measure and temp_beat - beat != beatDiff):
                                                                 noteHeadMain = "\\roff{\\tbbu0\\qb0"
+                                                                special = True
                                                             else:
                                                                 noteHeadMain = "\\nbbu0\\qb0"
+                                                                special = False
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/8) or (measure == temp_measure and temp_beat - beat >= max_beats/8):
                                                             noteHeadMain = "\\tbbu0\\qb0"
                                                             connect_type = beatDiff
-                                                        # elif connect_type < max_beats/16:
-                                                        #     noteHeadMain = "\\nbbu0\\qb0"
+                                                        elif connect_type <= max_beats/32 and special:
+                                                            noteHeadMain = "\\nbbu0\\qb0"
+                                                            special = False
+                                                            connect_type = beatDiff
                                                         else:
                                                             connect_type = beatDiff
                                                             noteHeadMain = "\\qb0"
                                                     else:
-                                                        noteHeadMain = "\\ibbu0l0\\qb0"
+                                                        noteHeadMain = "\\ibbu0o0\\qb0"
                                                         connected_note = True
+                                                        special = False
                                                         connect_type = beatDiff
                                                 else:
                                                     if connected_note:
@@ -271,20 +276,30 @@ if __name__ == "__main__":
                                                         if connect_type > max_beats/32:
                                                             if (measure + 1 == temp_measure and max_beats - beat != beatDiff) or (measure == temp_measure and temp_beat - beat != beatDiff):
                                                                 noteHeadMain = "\\roff{\\tbbbu0\\tbbu0\\qb0"
+                                                                special = True
                                                             else:
                                                                 noteHeadMain = "\\nbbbu0\\qb0"
+                                                                special = False
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/8) or (measure == temp_measure and temp_beat - beat >= max_beats/8):
                                                             noteHeadMain = "\\tbbu0\\qb0"
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/16) or (measure == temp_measure and temp_beat - beat >= max_beats/16):
-                                                            noteHeadMain = "\\tbbbu0\\qb0"
+                                                            if special:
+                                                                noteHeadMain = "\\tbbbu0\\tbbu0\\qb0"
+                                                            else:
+                                                                noteHeadMain = "\\tbbbu0\\qb0"
                                                             connect_type = beatDiff
+                                                        elif connect_type <= max_beats/64 and special:
+                                                            connect_type = beatDiff
+                                                            noteHeadMain = "\\nbbbu0\\qb0"
+                                                            special = False
                                                         else:
                                                             connect_type = beatDiff
                                                             noteHeadMain = "\\qb0"
                                                     else:
-                                                        noteHeadMain = "\\ibbbu0l0\\qb0"
+                                                        noteHeadMain = "\\ibbbu0o0\\qb0"
+                                                        special = False
                                                         connected_note = True
                                                         connect_type = beatDiff
                                                 else:
@@ -328,22 +343,38 @@ if __name__ == "__main__":
                                                 if (measure + 1 == temp_measure and max_beats - beat <= max_beats/8) or (measure == temp_measure and temp_beat - beat <= max_beats/8):
                                                     if connected_note:
                                                         if connect_type > max_beats/64:
-                                                            noteHeadMain = "\\nbbbbu0\\qb0"
+                                                            if (measure + 1 == temp_measure and max_beats - beat != beatDiff) or (measure == temp_measure and temp_beat - beat != beatDiff):
+                                                                noteHeadMain = "\\roff{\\tbbbbu0\\tbbbu0\\tbbu0\\qb0"
+                                                                special = True
+                                                            else:
+                                                                noteHeadMain = "\\nbbbbu0\\qb0"
+                                                                special = False
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/8) or (measure == temp_measure and temp_beat - beat >= max_beats/8):
                                                             noteHeadMain = "\\tbbu0\\qb0"
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/16) or (measure == temp_measure and temp_beat - beat >= max_beats/16):
-                                                            noteHeadMain = "\\tbbbu0\\qb0"
+                                                            if special:
+                                                                noteHeadMain = "\\tbbbu0\\tbbu0\\qb0"
+                                                            else:
+                                                                noteHeadMain = "\\tbbbu0\\qb0"
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/32) or (measure == temp_measure and temp_beat - beat >= max_beats/32):
-                                                            noteHeadMain = "\\tbbbbu0\\qb0"
+                                                            if special:
+                                                                noteHeadMain = "\\tbbbbu0\\tbbbu0\\tbbu0\\qb0"
+                                                            else:
+                                                                noteHeadMain = "\\tbbbbu0\\qb0"
                                                             connect_type = beatDiff
+                                                        elif connect_type <= max_beats/128 and special:
+                                                            connect_type = beatDiff
+                                                            noteHeadMain = "\\nbbbbu0\\qb0"
+                                                            special = False
                                                         else:
                                                             connect_type = beatDiff
                                                             noteHeadMain = "\\qb0"
                                                     else:
-                                                        noteHeadMain = "\\ibbbbu0l0\\qb0"
+                                                        noteHeadMain = "\\ibbbbu0o0\\qb0"
+                                                        special = False
                                                         connected_note = True
                                                         connect_type = beatDiff
                                                 else:
@@ -387,26 +418,41 @@ if __name__ == "__main__":
                                                 if (measure + 1 == temp_measure and max_beats - beat <= max_beats/8) or (measure == temp_measure and temp_beat - beat <= max_beats/8):
                                                     if connected_note:
                                                         if connect_type > max_beats/128:
-                                                            noteHeadMain = "\\nbbbbbu0\\qb0"
+                                                            if (measure + 1 == temp_measure and max_beats - beat != beatDiff) or (measure == temp_measure and temp_beat - beat != beatDiff):
+                                                                noteHeadMain = "\\roff{\\tbbbbbu0\\tbbbbu0\\tbbbu0\\tbbu0\\qb0"
+                                                                special = True
+                                                            else:
+                                                                noteHeadMain = "\\nbbbbbu0\\qb0"
+                                                                special = False
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/8) or (measure == temp_measure and temp_beat - beat >= max_beats/8):
                                                             noteHeadMain = "\\tbbu0\\qb0"
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/16) or (measure == temp_measure and temp_beat - beat >= max_beats/16):
-                                                            noteHeadMain = "\\tbbbu0\\qb0"
+                                                            if special:
+                                                                noteHeadMain = "\\tbbbu0\\tbbu0\\qb0"
+                                                            else:
+                                                                noteHeadMain = "\\tbbbu0\\qb0"
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/32) or (measure == temp_measure and temp_beat - beat >= max_beats/32):
-                                                            noteHeadMain = "\\tbbbbu0\\qb0"
+                                                            if special:
+                                                                noteHeadMain = "\\tbbbbu0\\tbbbu0\\tbbu0\\qb0"
+                                                            else:
+                                                                noteHeadMain = "\\tbbbbu0\\qb0"
                                                             connect_type = beatDiff
                                                         elif (measure + 1 == temp_measure and max_beats - beat >= max_beats/64) or (measure == temp_measure and temp_beat - beat >= max_beats/64):
-                                                            noteHeadMain = "\\tbbbbbu0\\qb0"
+                                                            if special:
+                                                                noteHeadMain = "\\tbbbbbu0\\tbbbbu0\\tbbbu0\\tbbu0\\qb0"
+                                                            else:
+                                                                noteHeadMain = "\\tbbbbbu0\\qb0"
                                                             connect_type = beatDiff
                                                         else:
 
                                                             connect_type = beatDiff
                                                             noteHeadMain = "\\qb0"
                                                     else:
-                                                        noteHeadMain = "\\ibbbbbu0l0\\qb0"
+                                                        noteHeadMain = "\\ibbbbbu0o0\\qb0"
+                                                        special = False
                                                         connected_note = True
                                                         connect_type = beatDiff
                                                 else:
