@@ -114,7 +114,7 @@ if __name__ == "__main__":
             lastMeasure = -1
             lastBeat = -1
             beat = 0
-            string = 1
+            string = strings
             inNotes = False
             catch_up_str = []
             for r in result:
@@ -198,7 +198,7 @@ if __name__ == "__main__":
                             o.write(" \\bar\n")
                         lastMeasure = measure
                         lastBeat = beat
-                        string = 1
+                        string = strings
                     elif len(r)>1:
                         if not inNotes:
                             o.write("   \\Notes\\hsk")
@@ -206,7 +206,7 @@ if __name__ == "__main__":
                         if "(" in r[1]:
                             r[1] = r[1].split("(")[1].split(")")[0]
                         o.write("\\str{" + str(string) + "}{" + r[1] + "}")
-                        string += 1
+                        string -= 1
             if inNotes:
                 beat = max_beats-lastBeat
                 measureDiff = measure-lastMeasure
