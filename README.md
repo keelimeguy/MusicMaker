@@ -55,8 +55,8 @@ From the "build/classes/" directory run:
 		[}]<br>
 		end
 
-`java musicmaker.theory.instrument.ConvertTool <instrument> <file>` to convert the given file of the above format to fret positions for the given instrument type ("-g" for guitar, "-u" for ukulele, "-lu" for low g ukulele)
+`java musicmaker.theory.instrument.ConvertTool <instrument_type> <frets> <file>` to convert the given file of the above format to fret positions (use frets=0 for default value: guitar=21, ukulele=15) for the given instrument type ("-g" for guitar, "-u" for ukulele, "-lu" for low g ukulele)
 
 From the "python_tools/" directory run:
 
-`python mus_to_tab.py [-h] <-t TAB> <-j JAVA_DIR> [-v] [-c] <-f FILE> <-o OUT>` to convert a file from the custom format above to a pdf tab sheet
+`python mus_to_tab.py [-h] <-t TAB> [-fr FRETS] <-j JAVA_DIR> [-v] [-e] [-c] <-f FILE> <-o OUT>` to convert a file from the custom format above to a pdf tab sheet, run with -h for help

@@ -70,10 +70,16 @@ if __name__ == "__main__":
         description='Convert a custom .mus file into a readable pdf.')
     parser.add_argument('-t', '--tab', default=None,
                         help='Tab type argument: ukulele, guitar, or none')
+    parser.add_argument('-r', '--reduce', action="store_true",
+                        help='Minimize tab numbers per chord (i.e. for single note on a beat, show a single finger position')
+    parser.add_argument('-fr', '--frets', default="0",
+                        help='Number of frets in the given string instrument')
     parser.add_argument('-j', '--java_dir', default="../build/classes",
                         help='Top directory of musicmaker java classes hierarchy')
     parser.add_argument('-v', '--verbose', action="store_true",
                         help='Print all possible instrument positions as well')
+    parser.add_argument('-e', '--exact', action="store_true",
+                        help='Use exact pitches when available')
     parser.add_argument('-c', '--connected', action="store_true",
                         help='Connect consecutive eighth notes, etc.')
     parser.add_argument('-f', '--file', default=None,
@@ -120,7 +126,7 @@ if __name__ == "__main__":
         with open(os.path.join(current_dir,args.out),"w") as o:
 
             o.write(header)
-            jargs = ['-cp', args.java_dir, classname, instrument,args.file]
+            jargs = ['-cp', args.java_dir, classname, instrument, args.frets, args.file]
             result = jarWrapper(*jargs)
             lastMeasure = -1
             lastBeat = -1
@@ -130,6 +136,8 @@ if __name__ == "__main__":
             connected_note = False
             connect_type = max_beats
             catch_up_str = []
+            nextTabCatchUp = []
+            numCurNotes = 0
             for cur_r_num in range(len(result)):
                 r = result[cur_r_num]
                 if args.verbose:
@@ -137,12 +145,20 @@ if __name__ == "__main__":
                 r = r.split()
                 if len(r)>0:
                     if r[0][0] == 'M':
+                        if args.reduce and len(nextTabCatchUp)>0:
+                            o.write("   \\Notes\\hsk")
+                            sorted_data = sorted(nextTabCatchUp, key=lambda tup: int(tup[1]))
+                            if numCurNotes > strings:
+                                numCurNotes = strings
+                            for i in range(numCurNotes):
+                                o.write("\\str{" + str(sorted_data[i][0]) + "}{" + sorted_data[i][1] + "}")
+                            nextTabCatchUp = []
                         measure = int(r[0].split("=")[1])
                         beat = int(r[1].split("=")[1])
                         # print(str(lastMeasure)+", "+str(lastBeat))
-                        # print(r)
                         # print("\n")
-                        if len(r)>2:
+                        if len(r)>3:
+                            numCurNotes = len(r[3:])
                             if inNotes:
                                 measureDiff = measure-lastMeasure
                                 if measureDiff >= 1:
@@ -525,21 +541,49 @@ if __name__ == "__main__":
                                     catch_up_str.append("{" + oct_str+accidental+note + "}")
                                 else:
                                     catch_up_str.append("{" + oct_str+accidental+note + "}")
-
+                        else:
+                            numCurNotes = 0
                         if measure != lastMeasure and lastMeasure != -1:
                             o.write(" \\bar\n")
                         lastMeasure = measure
                         lastBeat = beat
                         string = strings
                     elif len(r)>1:
-                        if not inNotes:
-                            o.write("   \\Notes\\hsk")
+                        selected = None
+                        if args.exact:
+                            for n in r[1:]:
+                                if not ("(" in n):
+                                    selected = n
+                                    break
+                        if args.reduce:
+                            if selected != None:
+                                if not inNotes:
+                                    nextTabCatchUp = []
+                                nextTabCatchUp.append([string, selected])
+                            else:
+                                if "(" in r[1]:
+                                    r[1] = r[1].split("(")[1].split(")")[0]
+                                nextTabCatchUp.append([string, r[1]])
+                        else:
+                            if not inNotes:
+                                o.write("   \\Notes\\hsk")
+                            if selected != None:
+                                o.write("\\str{" + str(string) + "}{" + selected + "}")
+                            else:
+                                if "(" in r[1]:
+                                    r[1] = r[1].split("(")[1].split(")")[0]
+                                o.write("\\str{" + str(string) + "}{" + r[1] + "}")
                         inNotes = True
-                        if "(" in r[1]:
-                            r[1] = r[1].split("(")[1].split(")")[0]
-                        o.write("\\str{" + str(string) + "}{" + r[1] + "}")
                         string -= 1
             if inNotes:
+                if args.reduce and len(nextTabCatchUp)>0:
+                    o.write("   \\Notes\\hsk")
+                    sorted_data = sorted(nextTabCatchUp, key=lambda tup: int(tup[1]))
+                    if numCurNotes > strings:
+                        numCurNotes = strings
+                    for i in range(numCurNotes):
+                        o.write("\\str{" + str(sorted_data[i][0]) + "}{" + sorted_data[i][1] + "}")
+
                 beat = max_beats-lastBeat
                 measureDiff = measure-lastMeasure
                 if measureDiff >= 1:

@@ -155,18 +155,19 @@ public class ConvertTool implements ISubscriber {
    }
 
    public static void main(String[] args) {
-      if (args.length != 2) {
-         System.err.println("Usage: java ConvertTool <instrument> <file>");
+      if (args.length != 3) {
+         System.err.println("Usage: java ConvertTool <-instrument_type frets> <file>");
          System.exit(-1);
       }
 
       StringInstrument instrument = null;
+      int frets = Integer.parseInt(args[1]);
       if (args[0].equals("-g"))
-         instrument = new Guitar(21);
+         instrument = new Guitar(frets>0?frets:21);
       else if (args[0].equals("-u"))
-         instrument = new Ukulele(15, false);
+         instrument = new Ukulele(frets>0?frets:15, false);
       else if (args[0].equals("-lu"))
-         instrument = new Ukulele(15, true);
+         instrument = new Ukulele(frets>0?frets:15, true);
       else {
          System.err.println("Error: Invalid instrument ?<instrument>=\"" + args[0] +"\"" +
             "\n\t<instrument> must be -g for guitar, -u for ukulele, -lu for low g ukulele");
@@ -178,9 +179,9 @@ public class ConvertTool implements ISubscriber {
       String[] line = null;
       int threads = 0, tempo = 0, bpm = 0;
       try {
-         reader = new BufferedReader(new FileReader(args[1]));
+         reader = new BufferedReader(new FileReader(args[2]));
       } catch (FileNotFoundException e) {
-         System.err.println("File "+args[1]+" not found");
+         System.err.println("File "+args[2]+" not found");
          System.exit(-1);
       }
       try {
