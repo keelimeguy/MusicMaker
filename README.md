@@ -59,4 +59,4 @@ From the "build/classes/" directory run:
 
 From the "python_tools/" directory run:
 
-`python mus_to_tab.py [-h] <-t TAB> <-j JAVA_DIR> [-v] <-f FILE> <-o OUT>` to convert a file from the custom format above to a pdf tab sheet
+`python mus_to_tab.py [-h] <-t TAB> <-j JAVA_DIR> [-v] [-c] <-f FILE> <-o OUT>` to convert a file from the custom format above to a pdf tab sheet
