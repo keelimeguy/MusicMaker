@@ -2,6 +2,7 @@ package musicmaker.theory;
 
 import musicmaker.sound.maxim.Maxim;
 import musicmaker.sound.StaffPlayer;
+import java.util.ArrayList;
 
 public class Scale {
 
@@ -141,6 +142,13 @@ public class Scale {
       this.intervals = intervals;
    }
 
+
+   public ArrayList<Note> getNotes() {
+      ArrayList<Note> ret = new ArrayList<Note>();
+      for (int i = 0; i < notes.length; i ++)
+         ret.add(notes[i]);
+      return ret;
+   }
 
    public Note getNote(int degree) {
       // Get the degree'th note of the scale. Per music theory, this is indexed

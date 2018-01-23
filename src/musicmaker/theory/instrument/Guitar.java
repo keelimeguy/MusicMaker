@@ -2,6 +2,7 @@ package musicmaker.theory.instrument;
 
 import musicmaker.theory.Chord;
 import musicmaker.theory.Note;
+import musicmaker.theory.Scale;
 import java.lang.Integer;
 import java.util.ArrayList;
 
@@ -13,18 +14,46 @@ public class Guitar extends StringInstrument{
 
    public static void main(String[] args) {
       if (args.length != 1 && args.length != 2) {
-         System.err.println("Usage: java Guitar [type] <chord|note>\n\tw/ [type] = '-c' or '-n'");
+         System.err.println("Usage: java Guitar [type] <scale(as Note-Type)|chord|note>\n\tw/ [type] = '-s', '-c', or '-n'");
          System.exit(-1);
       }
 
-      boolean ischord = !(args.length == 2 && args[0].equals("-n"));
+      int type = 1; // 0=scale, 1=chord, 2=note
+      if (args.length == 2 && args[0].equals("-n")) {
+         type = 2;
+      } else if (args.length == 2 && args[0].equals("-s")) {
+         type = 0;
+      }
 
       Guitar guitar = new Guitar(21);
 
       ArrayList<Integer>[] frets = null;
       String cur = "";
 
-      if (ischord) {
+      if (type == 0) {
+         Note key = Note.get(args[args.length-1].split("-")[0]);
+         String mode = args[args.length-1].split("-")[1];
+         if (key == null) {
+            System.err.println("Error: Invalid key ?<key>=\"" + (args[args.length-1].split("-")[0]) +"\"" +
+               "\n\t<key> should match [A-G](##?|bb?)?");
+            System.exit(-1);
+         }
+
+         if (Scale.Mode.get(mode) == null) {
+            System.err.println("Error: Unsupported mode ?<mode>=\"" + mode +"\"" +
+               "\n\tSupported modes are: " + Scale.getValidModesAsString());
+            System.exit(-1);
+         }
+
+         Scale scale = new Scale(key, Scale.Mode.get(mode).getIntervals());
+         frets = guitar.findOrderedFretsForNotes(scale.getNotes());
+
+         if(frets.length != 6)
+            System.exit(-1);
+
+         cur = "Notes in scale:  " + scale.getNotesAsString();
+
+      } else if (type == 1) {
          Chord chord = new Chord(args[args.length-1]);
 
          frets = guitar.findOrderedFretsForChord(chord);
@@ -54,7 +83,7 @@ public class Guitar extends StringInstrument{
          strings[string] = "";
          if(frets[string] != null)
             for (Integer fret: frets[string]) {
-               strings[string] += fret + "       ";
+               strings[string] += fret + "     ";
             }
       }
 

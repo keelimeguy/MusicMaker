@@ -32,9 +32,9 @@ From the "build/classes/" directory run:
 
 `java musicmaker.theory.Scale <key> <mode>` to play a scale in the given key and mode
 
-`java musicmaker.theory.instrument.Ukulele [type] <chord|note>` to show ukulele fret positions for the given chord or note w/ [type] = '-c', '-n', '-lc', or '-ln' (l for low g, c for chord, n for note)
+`java musicmaker.theory.instrument.Ukulele [type] <scale|chord|note>` to show ukulele fret positions for the given chord or note w/ [type] = '-s', -c', '-n', '-ls', -lc', or '-ln' (l for low g, c for chord, n for note). If scale, use <scale> = Note-Type, e.g. C-Major.
 
-`java musicmaker.theory.instrument.Guitar [type] <chord|note>` to show guitar fret positions for the given chord or note w/ [type] = '-c' or '-n' (c for chord, n for note)
+`java musicmaker.theory.instrument.Guitar [type] <scale|chord|note>` to show guitar fret positions for the given chord or note w/ [type] = '-s', '-c', or '-n' (c for chord, n for note)
 
 `java musicmaker.sound.StaffPlayer <tempo> <beatsPerMeasure> <chord1> <length1> <chord2> <length2> ...` to play the given chords
 
