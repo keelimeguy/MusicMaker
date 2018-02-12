@@ -85,7 +85,7 @@ public class StaffPlayer implements ISubscriber {
 
    public void stop() {
       pause();
-      pitchesNowPlaying = null;
+      // pitchesNowPlaying = null;
       if (waves != null) {
          for (int i = 0; i < waves.size(); i ++) {
             for (WavetableSynth wave: waves.get(i))

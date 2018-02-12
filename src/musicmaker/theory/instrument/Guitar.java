@@ -31,6 +31,11 @@ public class Guitar extends StringInstrument{
       String cur = "";
 
       if (type == 0) {
+         if (args[args.length-1].split("-").length != 2) {
+            System.err.println("Error: Invalid scale ?<scale>=\"" + (args[args.length-1]) +"\"" +
+               "\n\t<Scale> should match [A-G](##?|bb?)?-<Mode>");
+            System.exit(-1);
+         }
          Note key = Note.get(args[args.length-1].split("-")[0]);
          String mode = args[args.length-1].split("-")[1];
          if (key == null) {
