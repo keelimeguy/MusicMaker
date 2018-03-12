@@ -52,7 +52,7 @@ header = """\\documentclass{article}
 """
 
 def jarWrapper(*args):
-    process = Popen(['java']+list(args), stdout=PIPE, stderr=PIPE)
+    process = Popen(['java']+list(args), stdout=PIPE, stderr=PIPE, universal_newlines=True)
     ret = []
     while process.poll() is None:
         line = process.stdout.readline()
