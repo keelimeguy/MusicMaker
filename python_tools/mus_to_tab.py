@@ -183,7 +183,7 @@ if __name__ == "__main__":
                                     noteHeadMain = "\\qa"
                                 elif beatDiff >= max_beats/8:
                                     if using_connected_notes:
-                                        if cur_r_num+strings+2 < len(result):
+                                        if cur_r_num+strings+2 < len(result) and result[cur_r_num+2+strings] != '':
                                             temp_measure = int(result[cur_r_num+strings+2].split()[0].split("=")[1])
                                             temp_beat = int(result[cur_r_num+strings+2].split()[1].split("=")[1])
                                             if lastMeasure == measure and len(r) > 3:
