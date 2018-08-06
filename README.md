@@ -2,6 +2,7 @@
 
 A program to make, generate, and play: chord progressions, phrases, and other such musical things
 
+There is also a _newer_ [python version](https://github.com/keelimeguy/MusicMakerPy).
 
 ## Usage
 
