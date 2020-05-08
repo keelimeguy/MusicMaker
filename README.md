@@ -2,7 +2,7 @@
 
 A program to make, generate, and play: chord progressions, phrases, and other such musical things
 
-There is also a _newer_ [python version](https://github.com/keelimeguy/MusicMakerPy).
+There is also a _newer_ [python version](https://github.com/keelimeguy/MusicMakerPy) and [c++ version](https://github.com/keelimeguy/MusicMaker_JUCE).
 
 ## Usage
 
